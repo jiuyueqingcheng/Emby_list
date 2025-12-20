@@ -9,95 +9,224 @@ dns:
 subscribe-url:
 # > 远程服务器
 proxy-providers:
-  Subscribe:
-    interval: 86400
-    url: https://stall.cnvip.ddns-ip.net/admin1
-    benchmark-timeout: 5
-    benchmark-url: http://1.1.1.1/generate_204
-  CF-Trojan:
+  备用:
     interval: 0
-    url: https://_acme-challenge.isvip.ddns-ip.net/sub/a0c4b23c-a8cf-4312-8d6c-923f7681ccc6
+    url: https://dingyue.till.nyc.mn/till
 proxy-groups:
   # 分流分组
-  - {name: 手动切换, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png', type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], use: [Subscribe, CF-Trojan]}
-  - {name: 国外网站, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
-  - {name: 国际媒体, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
-  - {name: 微软服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
-  - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 英国节点, 印尼节点, 澳大利亚节点, 巴西节点, 印度节点, 德国节点, 移动优选, 联通优选, 电信优选]}
-  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 英国节点, 印尼节点, 其他节点, 印度节点, 巴西节点, 澳大利亚节点, 德国节点, 移动优选, 联通优选, 电信优选]}
+  - {name: 手动切换, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png', type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], use: [], use-url: null}
+  - {name: Emby, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png', type: select, include-all: null, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 印尼节点, 英国节点, 韩国节点, 印度节点, 巴西节点, 澳大利亚节点, 德国节点, 移动优选, 联通优选, 电信优选, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
+  - {name: 微软服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 澳大利亚节点, 英国节点, 德国节点, 印度节点, 巴西节点, 印尼节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
+  - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 英国节点, 印尼节点, 澳大利亚节点, 巴西节点, 印度节点, 德国节点, 移动优选, 联通优选, 电信优选, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
+  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 印尼节点, 印度节点]}
   - {name: 推特消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 英国节点, 印尼节点, 澳大利亚节点, 巴西节点, 印度节点, 德国节点, 移动优选, 联通优选, 电信优选]}
-  - {name: AI, icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
+  - icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/tiktok.png
+    name: Tiktok
+    proxies:
+      - 台湾节点
+      - 日本节点
+      - 韩国节点
+      - 狮城节点
+      - 美国节点
+      - 澳大利亚节点
+      - 英国节点
+      - 德国节点
+      - 印度节点
+      - 巴西节点
+      - 印尼节点
+      - 墨西哥节点
+      - 俄罗斯节点
+      - 南非节点
+      - 沙特阿拉伯节点
+      - 智利节点
+      - 罗马尼亚节点
+      - 以色列节点
+      - 西班牙节点
+      - 荷兰节点
+      - 尼日利亚节点
+      - 法国节点
+      - 土耳其节点
+      - 加拿大节点
+      - 泰国节点
+      - 香港节点
+    type: select
+  - {name: Spotify, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png', type: select, proxies: [手动切换, 美国节点]}
+  - name: Twitch
+    type: select
+    proxies:
+      - 美国节点
+      - 澳大利亚节点
+      - 英国节点
+      - 德国节点
+      - 印度节点
+      - 巴西节点
+      - 印尼节点
+      - 墨西哥节点
+      - 俄罗斯节点
+      - 南非节点
+      - 沙特阿拉伯节点
+      - 智利节点
+      - 罗马尼亚节点
+      - 以色列节点
+      - 西班牙节点
+      - 荷兰节点
+      - 尼日利亚节点
+      - 法国节点
+      - 土耳其节点
+      - 狮城节点
+      - 韩国节点
+      - 日本节点
+      - 台湾节点
+      - 香港节点
+      - 加拿大节点
+      - 泰国节点
+    icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/twitch.png
+  - name: Wikipedia
+    type: select
+    proxies:
+      - 香港节点
+      - 台湾节点
+      - 日本节点
+      - 韩国节点
+      - 狮城节点
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/wikipedia.png
+  - {name: AI, icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png', type: select, proxies: [手动切换, 美国节点, 狮城节点, 日本节点, 台湾节点]}
   - {name: 游戏平台, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
-  - {name: Emby, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png', type: select, include-all: null, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 印尼节点, 英国节点, 韩国节点, 印度节点, 巴西节点, 澳大利亚节点, 德国节点, 其他节点, 移动优选, 联通优选, 电信优选]}
-  - {name: Spotify, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
-  - {name: 兜底分流, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/friestash.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
+  - {name: 国外网站, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 澳大利亚节点, 英国节点, 德国节点, 印度节点, 巴西节点, 印尼节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 加拿大节点, 泰国节点]}
+  - {name: 国际媒体, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 澳大利亚节点, 英国节点, 德国节点, 印度节点, 巴西节点, 印尼节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
+  - {name: 兜底分流, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/friestash.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT, 韩国节点, 澳大利亚节点, 英国节点, 德国节点, 印度节点, 巴西节点, 印尼节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
   # 节点地区分流
   - {name: 香港节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇭🇰|香港|(\b(HK|Hong)\b)"}
-  - {name: 美国节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b)"}
-  - {name: 狮城节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png', type: url-test, interval: 500, include-all: true, filter: "(?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)", tolerance: 15}
-  - {name: 日本节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇯🇵|日本|东京|(\b(JP|Japan)\b)"}
   - {name: 台湾节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)"}
+  - {name: 日本节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇯🇵|日本|东京|(\b(JP|Japan)\b)"}
   - name: 韩国节点
     type: url-test
-    filter: 🇰🇷
+    filter: 韩国|🇰🇷
     include-all: true
     interval: 300
     icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/KR.png
-  - filter: 🇬🇧
-    include-all: true
-    interval: 300
-    name: 英国节点
-    type: url-test
-    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/GB.png
-  - filter: 🇮🇩
-    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/MC.png
-    include-all: true
-    interval: 300
-    name: 印尼节点
-    type: url-test
+  - {name: 狮城节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png', type: url-test, interval: 500, include-all: true, filter: "(?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)", tolerance: 15}
+  - {name: 美国节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png', type: url-test, interval: 300, include-all: true, filter: "(?i)🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b)"}
   - filter: 澳大利亚|🇦🇺
     name: 澳大利亚节点
     type: url-test
     icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/AU.png
     interval: 300
     include-all: true
-  - filter: 巴西|🇧🇷
-    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/BR.png
+  - filter: 🇬🇧|英国
     include-all: true
-    name: 巴西节点
+    interval: 300
+    name: 英国节点
     type: url-test
-  - filter: 印度|🇮🇳
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/GB.png
+  - filter: 🇩🇪|德国|DE
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/BE.png
+    include-all: true
+    name: 德国节点
+    type: url-test
+  - filter: 海得|🇮🇳
     icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/IN.png
     include-all: true
     interval: 300
     name: 印度节点
     type: url-test
-  - filter: 🇩🇪
-    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/BE.png
+  - filter: 巴西|🇧🇷
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/BR.png
     include-all: true
-    name: 德国节点
+    name: 巴西节点
+    type: url-test
+  - filter: 🇮🇩|尼西亚
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/MC.png
+    include-all: true
+    interval: 300
+    name: 印尼节点
+    type: url-test
+  - filter: 🇲🇽|墨西哥
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/MX.png
+    include-all: true
+    name: 墨西哥节点
+    type: url-test
+  - filter: 🇷🇺|俄罗斯
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/RU.png
+    include-all: true
+    name: 俄罗斯节点
+    type: url-test
+  - filter: 🇿🇦|南非
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/ZA.png
+    include-all: true
+    name: 南非节点
+    type: url-test
+  - filter: 🇸🇦|沙特
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/SA.png
+    include-all: true
+    name: 沙特阿拉伯节点
+    type: url-test
+  - filter: 🇨🇱|智利
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/CL.png
+    include-all: true
+    name: 智利节点
+    type: url-test
+  - filter: 🇷🇴|罗马
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/RO.png
+    include-all: true
+    name: 罗马尼亚节点
+    type: url-test
+  - filter: 🇮🇱|以色列
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/IL.png
+    include-all: true
+    name: 以色列节点
+    type: url-test
+  - filter: 🇪🇸|西班牙
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/ES.png
+    include-all: true
+    name: 西班牙节点
+    type: url-test
+  - filter: 🇳🇱|荷兰
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/NL.png
+    include-all: true
+    name: 荷兰节点
+    type: url-test
+  - filter: 🇳🇬|尼日利亚
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/NG.png
+    include-all: true
+    name: 尼日利亚节点
+    type: url-test
+  - filter: 🇫🇷|法国
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/FR.png
+    include-all: true
+    name: 法国节点
+    type: url-test
+  - filter: 🇹🇷|土耳其
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/TR.png
+    include-all: true
+    name: 土耳其节点
+    type: url-test
+  - filter: 🇨🇦|加拿大
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/CA.png
+    include-all: true
+    name: 加拿大节点
+    type: url-test
+  - filter: 🇹🇭|泰国
+    icon: https://gitlab.com/lodepuly/iconlibrary/-/raw/main/Flag_icon/120px/TH.png
+    include-all: true
+    name: 泰国节点
     type: url-test
   - filter: 移动
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/yidong(1).png
     include-all: true
     name: 移动优选
-    type: select
+    type: url-test
   - filter: 联通
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/liantong(0).png
     include-all: true
     name: 联通优选
-    type: select
+    type: url-test
   - filter: 电信
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/dianxin.png
     include-all: true
     lazy: true
     name: 电信优选
-    type: select
-  - filter: ^(?=.*(.))(?!.*((?i)🇭🇰|🇩🇪|🇹🇼|🇮🇳|🇯🇵|🇰🇷|🇸🇬|🇺🇸|🇬🇧|续费|移动|联通|电信|🇮🇩|🇦🇺|🇧🇷|香港|台湾|日本|川日|东京|大阪|泉日|埼玉|韩国|韓|首尔|新加坡|狮|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|(\b(HK|Hong|TW|Tai|Taiwan|JP|Japan|KR|Korea|SG|Singapore|US|United States|GAME|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)\b|(\d{4}-\d{2}-\d{2}|\dG)))).*$
-    include-all: true
-    name: 其他节点
     type: url-test
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/quanqiu(1).png
 rule-providers:
   # 局域网   
   Lan: {behavior: classical, format: text, interval: 86400, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/Lan.list'}
@@ -123,7 +252,7 @@ rule-providers:
   # AI平台
   AI: {behavior: classical, format: text, interval: 86400, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/AI.list'}
   # Emby
-  Emby: {behavior: classical, format: text, interval: 86400, url: 'https://raw.githubusercontent.com/JiuYueQingCheng/Emby_list/refs/heads/main/Rule/Emby.list'}
+  Emby: {behavior: classical, format: text, interval: 86400, url: 'https://raw.githubusercontent.com/jiuyueqingcheng/Emby_list/refs/heads/main/Rule/Emby.list'}
   # Spotify
   Spotify: {behavior: classical, format: text, interval: 86400, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/Spotify.list'}
   # 国际媒体
@@ -135,7 +264,25 @@ rule-providers:
   TikTok: {behavior: classical, format: text, interval: 86400, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/TikTok.list'}
   # 代理网站
   ProxyGFW: {behavior: classical, format: text, interval: 86400, url: 'https://github.com/Repcz/Tool/raw/X/Stash/Rules/ProxyGFW.list'}
+  Twitch:
+    behavior: "classical"
+    format: text
+    interval: 0
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Twitch/Twitch.list
+  Wikipedia:
+    behavior: classical
+    format: text
+    interval: 0
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Wikipedia/Wikipedia.list
 rules:
+  - DOMAIN-KEYWORD,cloudflare,🇺🇸美国搬瓦工-VLESS
+  - DOMAIN-KEYWORD,leaflow,DIRECT
+  - DOMAIN-KEYWORD,haijiao,🇺🇸美国搬瓦工-VLESS
+  - DOMAIN-KEYWORD,run.freecloud.ltd,🇺🇸美国搬瓦工-VLESS
+  - DOMAIN-KEYWORD,icmp9.com,DIRECT
+  - RULE-SET,Wikipedia,Wikipedia
+  - RULE-SET,Twitch,Twitch
+  - RULE-SET,TikTok,Tiktok
   - DOMAIN-KEYWORD,apple,DIRECT
   - RULE-SET,Reject,REJECT
   - RULE-SET,AI,AI
@@ -163,50 +310,4 @@ rules:
   - RULE-SET,Lan,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,兜底分流
-proxies:
-  - alpn:
-      - h3
-    client-fingerprint: firefox
-    name: 美国搬瓦工-TUIC
-    password: YYjBkt5fvD
-    port: 2053
-    server: 104.224.159.55
-    servername: statici.icloud.com
-    skip-cert-verify: true
-    sni: statici.icloud.com
-    tls: true
-    type: tuic
-    uuid: E59806B9-6BB5-4692-855F-BBA12D005DA0
-    version: 5
-  - client-fingerprint: firefox
-    name: 美国洛杉矶-Ttojan
-    network: ws
-    password: 93kQpp37gA
-    port: 2083
-    server: 74.48.5.57
-    servername: 8.39.125.176
-    skip-cert-verify: true
-    sni: 8.39.125.176
-    tls: true
-    type: trojan
-    ws-opts:
-      headers: {}
-      path: /aaa
-  - # 美国搬瓦工-Vmess
-    alterId: 0
-    cipher: auto
-    flow: ""
-    name: 美国搬瓦工-Vmess
-    network: ws
-    port: 443
-    server: 104.224.159.55
-    servername: bing.com
-    skip-cert-verify: true
-    sni: bing.com
-    tls: true
-    type: vmess
-    uuid: e59806b9-6bb5-4692-855f-bba12d005da0
-    ws-opts:
-      headers:
-        Host: icook.hk
-      path: /abc
+proxies: [{alterId: 0, cipher: "", client-fingerprint: chrome, flow: xtls-rprx-vision, name: 🇺🇸美国搬瓦工-VLESS, port: 10086, reality-opts: {public-key: OXKd8HXK_kui-Cyul7dnK407Mjya6faAqDrcOsAV4HE, short-id: ""}, server: 104.224.159.55, servername: statici.icloud.com, skip-cert-verify: true, sni: statici.icloud.com, tls: true, type: vless, uuid: e59806b9-6bb5-4692-855f-bba12d005da0}, {name: 🇺🇸美国搬瓦工-TUIC, password: YYjBkt5fvD, port: 2053, server: 104.224.159.55, servername: statici.icloud.com, skip-cert-verify: true, sni: statici.icloud.com, tls: true, type: tuic, uuid: e59806b9-6bb5-4692-855f-bba12d005da0, version: 5}, {alterId: 0, cipher: auto, flow: "", name: 🇺🇸美国搬瓦工-Vmess, network: ws, port: 443, server: 104.224.159.55, servername: bing.com, skip-cert-verify: true, sni: bing.com, tls: true, type: vmess, uuid: e59806b9-6bb5-4692-855f-bba12d005da0, ws-opts: {headers: {Host: icook.hk}, path: /abc}}, {client-fingerprint: chrome, name: 🇺🇸美国搬瓦工-Trojan, network: ws, password: YYjBkt5fvD, port: 2058, server: 104.224.159.55, servername: apple.com, skip-cert-verify: true, sni: apple.com, tls: true, type: trojan, ws-opts: {headers: {Host: apple.com}, path: /aaa}}]
