@@ -17,7 +17,7 @@ proxy-providers:
     url: https://xianlu2.nezha.su/s/e86475fb7c4a438d439418706c2a5f9f
 proxy-groups:
   # 分流分组
-  - {name: 手动切换, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png', type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], use: [], use-url: null}
+  - {name: 手动切换, icon: 'https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png', type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], use: null, use-url: null, filter: '^((?! 套餐|到期|剩余|距离|重置|更新|上线|恶意|影响|恢复|优化|频道|重要|官网|导航|近期|今日|新增|修复|扩容|故障).)+$'}
   - {name: Emby, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png', type: select, include-all: null, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 印尼节点, 英国节点, 韩国节点, 印度节点, 巴西节点, 澳大利亚节点, 德国节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
   - {name: 微软服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 澳大利亚节点, 英国节点, 德国节点, 印度节点, 巴西节点, 印尼节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
   - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, 韩国节点, 英国节点, 印尼节点, 澳大利亚节点, 巴西节点, 印度节点, 德国节点, 墨西哥节点, 俄罗斯节点, 南非节点, 沙特阿拉伯节点, 智利节点, 罗马尼亚节点, 以色列节点, 西班牙节点, 荷兰节点, 尼日利亚节点, 法国节点, 土耳其节点, 加拿大节点, 泰国节点]}
@@ -84,6 +84,20 @@ proxy-groups:
       - 加拿大节点
       - 泰国节点
     icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/twitch.png
+  - icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png
+    name: Instagram
+    proxies:
+      - 美国节点
+      - 狮城节点
+      - 韩国节点
+      - 日本节点
+      - 台湾节点
+      - 香港节点
+      - 澳大利亚节点
+      - 英国节点
+      - 德国节点
+      - 印度节点
+    type: select
   - name: Wikipedia
     type: select
     proxies:
@@ -278,6 +292,7 @@ rule-providers:
     interval: 0
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Wikipedia/Wikipedia.list
 rules:
+  - DOMAIN-KEYWORD,instagram,Instagram
   - DOMAIN-KEYWORD,cloudflare,🇺🇸美国搬瓦工-VLESS
   - DOMAIN-KEYWORD,leaflow,DIRECT
   - DOMAIN-KEYWORD,haijiao,🇺🇸美国搬瓦工-VLESS
