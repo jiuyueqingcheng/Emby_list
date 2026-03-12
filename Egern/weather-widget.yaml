@@ -1,3 +1,7 @@
+name: ☁️天气模块
+description: 显示距离节日/节气/传统节日的天数
+author: iBL3ND
+dns: {}
 scriptings:
   - generic:
       name: weather_widget
