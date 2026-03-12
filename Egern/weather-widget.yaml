@@ -1,0 +1,212 @@
+scriptings:
+  - generic:
+      name: weather_widget
+      timeout: 20
+      script: |
+
+        export default async function(ctx){
+
+        const city = ctx.env.CITY || "Beijing"
+
+        let nowTemp="--°"
+        let nowCond="--"
+        let humidity="--"
+        let wind="--"
+        let forecast=[]
+
+        try{
+
+        const resp=await fetch(`https://wttr.in/${city}?format=j1`)
+        const data=await resp.json()
+
+        const now=data.current_condition[0]
+
+        nowTemp=now.temp_C+"°"
+        nowCond=now.weatherDesc[0].value
+        humidity=now.humidity+"%"
+        wind=now.windspeedKmph+"km/h"
+
+        for(let i=0;i<7;i++){
+
+        const d=data.weather[i]
+
+        forecast.push({
+        date:d.date.slice(5),
+        min:d.mintempC,
+        max:d.maxtempC
+        })
+
+        }
+
+        }catch(e){}
+
+        function icon(c){
+
+        c=c.toLowerCase()
+
+        if(c.includes("sun")) return "sun.max.fill"
+        if(c.includes("cloud")) return "cloud.fill"
+        if(c.includes("rain")) return "cloud.rain.fill"
+        if(c.includes("snow")) return "snow"
+        if(c.includes("storm")) return "cloud.bolt.rain.fill"
+
+        return "cloud.sun.fill"
+
+        }
+
+        function background(){
+
+        const h=new Date().getHours()
+
+        if(h>=6 && h<11)
+        return ["#FFB75E","#ED8F03"]
+
+        if(h>=11 && h<17)
+        return ["#4facfe","#00f2fe"]
+
+        if(h>=17 && h<20)
+        return ["#ff9966","#ff5e62"]
+
+        return ["#141E30","#243B55"]
+
+        }
+
+        return{
+
+        type:"widget",
+
+        padding:18,
+
+        backgroundGradient:{
+        type:"linear",
+        colors:background(),
+        startPoint:{x:0,y:0},
+        endPoint:{x:1,y:1}
+        },
+
+        children:[
+
+        {
+        type:"stack",
+        direction:"row",
+        alignItems:"center",
+        gap:10,
+
+        children:[
+
+        {
+        type:"image",
+        src:`sf-symbol:${icon(nowCond)}`,
+        width:32,
+        height:32,
+        color:"#fff"
+        },
+
+        {
+        type:"text",
+        text:city,
+        font:{size:"headline",weight:"bold"},
+        textColor:"#fff"
+        }
+
+        ]
+        },
+
+        {type:"spacer",length:8},
+
+        {
+        type:"text",
+        text:nowTemp,
+        font:{size:"largeTitle",weight:"bold"},
+        textColor:"#fff"
+        },
+
+        {
+        type:"text",
+        text:nowCond,
+        font:{size:"subheadline"},
+        textColor:"#ffffffcc"
+        },
+
+        {type:"spacer",length:10},
+
+        {
+        type:"stack",
+        direction:"row",
+        gap:20,
+
+        children:[
+
+        {
+        type:"text",
+        text:`湿度 ${humidity}`,
+        font:{size:"caption1"},
+        textColor:"#ffffffcc"
+        },
+
+        {
+        type:"text",
+        text:`风速 ${wind}`,
+        font:{size:"caption1"},
+        textColor:"#ffffffcc"
+        }
+
+        ]
+        },
+
+        {type:"spacer",length:12},
+
+        {
+        type:"stack",
+        direction:"row",
+        gap:14,
+
+        children:forecast.slice(0,5).map(f=>({
+
+        type:"stack",
+        direction:"column",
+        gap:4,
+
+        children:[
+
+        {
+        type:"text",
+        text:f.date,
+        font:{size:"caption2"},
+        textColor:"#ffffffcc"
+        },
+
+        {
+        type:"text",
+        text:`${f.min}°/${f.max}°`,
+        font:{size:"caption2"},
+        textColor:"#ffffffaa"
+        }
+
+        ]
+
+        }))
+        },
+
+        {type:"spacer"},
+
+        {
+        type:"date",
+        date:new Date().toISOString(),
+        format:"time",
+        font:{size:"caption2"},
+        textColor:"#ffffffaa"
+        }
+
+        ]
+
+        }
+
+        }
+
+widgets:
+  - name: weather_widget
+    title: Weather
+    refresh_after: 900
+    env:
+      CITY: Beijing
