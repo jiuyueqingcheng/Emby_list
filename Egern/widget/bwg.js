@@ -19,11 +19,9 @@ export default async function (ctx) {
     return '#30D158';
   }
 
-  // 👇 这里改成了 iOS 官方浅色/深色配色
+  // ✅ 标准 iOS 深浅模式配色
   const C = {
-    bg1:       { light: '#F2F2F7', dark: '#1C1C1E' },
-    bg2:       { light: '#F2F2F7', dark: '#1C1C1E' },
-    bg3:       { light: '#F2F2F7', dark: '#1C1C1E' },
+    bg:        { light: '#F2F2F7', dark: '#1C1C1E' },
     title:     { light: '#000000', dark: '#FFFFFF' },
     accent:    { light: '#007AFF', dark: '#007AFF' },
     subtext:   { light: '#3C3C43', dark: '#EBEBF5' },
@@ -36,12 +34,7 @@ export default async function (ctx) {
   function errorWidget(msg) {
     return {
       type: 'widget',
-      backgroundGradient: {
-        type: 'linear',
-        colors: [C.bg1, C.bg2],
-        startPoint: { x: 0, y: 0 },
-        endPoint: { x: 1, y: 1 },
-      },
+      background: C.bg, // 纯色适配深浅，去掉渐变
       padding: 16,
       gap: 8,
       children: [
@@ -113,14 +106,6 @@ export default async function (ctx) {
     : info.ve_status === 'starting' ? '#FF9F0A'
     : '#FF453A';
 
-  const BG = {
-    type: 'linear',
-    colors: [C.bg1, C.bg2, C.bg3],
-    stops: [0, 0.5, 1],
-    startPoint: { x: 0, y: 0 },
-    endPoint: { x: 1, y: 1 },
-  };
-
   function metricRow(icon, iconColor, label, usedS, totalS, pct, color, barLen) {
     const f   = Math.round((pct / 100) * barLen);
     const bar = '█'.repeat(f) + '░'.repeat(barLen - f);
@@ -147,6 +132,7 @@ export default async function (ctx) {
     };
   }
 
+  // 锁屏圆形
   if (ctx.widgetFamily === 'accessoryCircular') {
     return {
       type: 'widget',
@@ -173,6 +159,7 @@ export default async function (ctx) {
     };
   }
 
+  // 锁屏矩形
   if (ctx.widgetFamily === 'accessoryRectangular') {
     return {
       type: 'widget',
@@ -186,31 +173,32 @@ export default async function (ctx) {
           gap: 5,
           children: [
             { type: 'image', src: 'sf-symbol:circle.fill', color: statusColor, width: 8, height: 8 },
-            { type: 'text', text: 'BWH · ' + statusText, font: { size: 'headline', weight: 'bold' }, maxLines: 1 },
+            { type: 'text', text: 'BWH · ' + statusText, font: { size: 'headline', weight: 'bold' }, textColor: C.title, maxLines: 1 },
           ],
         },
-        { type: 'text', text: '流量 ' + usedStr + ' / ' + totalStr + ' (' + trafficPct + '%)', font: { size: 'body' }, maxLines: 1, minScale: 0.8 },
+        { type: 'text', text: '流量 ' + usedStr + ' / ' + totalStr + ' (' + trafficPct + '%)', font: { size: 'body' }, textColor: C.bodytext, maxLines: 1, minScale: 0.8 },
         {
           type: 'stack',
           direction: 'row',
           alignItems: 'center',
           gap: 4,
           children: [
-            { type: 'text', text: '重置：', font: { size: 'footnote' } },
-            { type: 'date', date: resetISO, format: 'relative', font: { size: 'footnote', weight: 'medium' } },
+            { type: 'text', text: '重置：', font: { size: 'footnote' }, textColor: C.fainttext },
+            { type: 'date', date: resetISO, format: 'relative', font: { size: 'footnote', weight: 'medium' }, textColor: C.subtext },
           ],
         },
       ],
     };
   }
 
+  // 小部件
   if (ctx.widgetFamily === 'systemSmall') {
-    const BAR = 10;
+    const BAR = 12;
     const tf  = Math.round(trafficRatio * BAR);
     const bar = '█'.repeat(tf) + '░'.repeat(BAR - tf);
     return {
       type: 'widget',
-      backgroundGradient: BG,
+      background: C.bg,
       padding: 12,
       gap: 3,
       children: [
@@ -244,10 +232,11 @@ export default async function (ctx) {
     };
   }
 
+  // 中部件
   if (ctx.widgetFamily === 'systemMedium') {
     return {
       type: 'widget',
-      backgroundGradient: BG,
+      background: C.bg,
       padding: 14,
       gap: 5,
       children: [
@@ -314,10 +303,11 @@ export default async function (ctx) {
     };
   }
 
+  // 大部件
   const BAR_LEN = 26;
   return {
     type: 'widget',
-    backgroundGradient: BG,
+    background: C.bg,
     padding: 14,
     gap: 1,
     children: [
