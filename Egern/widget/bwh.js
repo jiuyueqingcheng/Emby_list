@@ -18,19 +18,18 @@ export default async function (ctx) {
     return '#30D158';
   }
 
-  // ✅ 错误页完全适配 iOS 深浅模式
+  // 全局 iOS 深浅色定义
+  const COLORS = {
+    bg:      { light: '#F2F2F7', dark: '#1C1C1E' },
+    text:    { light: '#000000', dark: '#FFFFFF' },
+    subText: { light: '#3C3C43', dark: '#EBEBF5' },
+    gray:    { light: '#8E8E93', dark: '#8E8E93' },
+  };
+
   function errorWidget(msg) {
     return {
       type: 'widget',
-      backgroundGradient: {
-        type: 'linear',
-        colors: [
-          { light: '#F2F2F7', dark: '#1C1C1E' },
-          { light: '#E5E5EA', dark: '#2C2C2E' }
-        ],
-        startPoint: { x: 0, y: 0 },
-        endPoint: { x: 1, y: 1 },
-      },
+      background: COLORS.bg,
       padding: 16,
       gap: 8,
       children: [
@@ -45,7 +44,7 @@ export default async function (ctx) {
           type: 'text',
           text: msg,
           font: { size: 'footnote' },
-          textColor: { light: '#FF453A', dark: '#FF453A' },
+          textColor: '#FF453A',
           maxLines: 3,
         },
       ],
@@ -86,20 +85,7 @@ export default async function (ctx) {
     : info.ve_status === 'starting' ? '#FF9F0A'
     : '#FF453A';
 
-  // ✅ 全局背景完全按你要求：iOS 官方深浅色
-  const BG = {
-    type: 'linear',
-    colors: [
-      { light: '#F2F2F7', dark: '#1C1C1E' },
-      { light: '#F5F5F9', dark: '#2C2C2E' },
-      { light: '#FFFFFF', dark: '#1C1C1E' }
-    ],
-    stops: [0, 0.5, 1],
-    startPoint: { x: 0, y: 0 },
-    endPoint: { x: 1, y: 1 },
-  };
-
-  // ── 锁屏圆形 ─────────────────────────────────────────────
+  // 锁屏圆形
   if (ctx.widgetFamily === 'accessoryCircular') {
     return {
       type: 'widget',
@@ -118,7 +104,7 @@ export default async function (ctx) {
           type: 'text',
           text: 'BWH',
           font: { size: 'caption2' },
-          textColor: { light: '#8E8E93', dark: '#8E8E93' },
+          textColor: COLORS.gray,
           textAlign: 'center',
           maxLines: 1,
         },
@@ -126,7 +112,7 @@ export default async function (ctx) {
     };
   }
 
-  // ── 锁屏矩形 ─────────────────────────────────────────────
+  // 锁屏矩形
   if (ctx.widgetFamily === 'accessoryRectangular') {
     return {
       type: 'widget',
@@ -137,14 +123,14 @@ export default async function (ctx) {
           type: 'text',
           text: 'BWH 流量监控',
           font: { size: 'headline', weight: 'bold' },
-          textColor: { light: '#000000', dark: '#FFFFFF' },
+          textColor: COLORS.text,
           maxLines: 1,
         },
         {
           type: 'text',
           text: `已用 ${usedStr} / ${totalStr}  (${pct}%)`,
           font: { size: 'body' },
-          textColor: { light: '#3C3C43', dark: '#EBEBF5' },
+          textColor: COLORS.subText,
           maxLines: 1,
           minScale: 0.8,
         },
@@ -158,14 +144,14 @@ export default async function (ctx) {
               type: 'text',
               text: '重置：',
               font: { size: 'footnote' },
-              textColor: { light: '#8E8E93', dark: '#8E8E93' },
+              textColor: COLORS.gray,
             },
             {
               type: 'date',
               date: resetISO,
               format: 'relative',
               font: { size: 'footnote', weight: 'medium' },
-              textColor: { light: '#007AFF', dark: '#007AFF' },
+              textColor: COLORS.subText,
             },
           ],
         },
@@ -173,15 +159,14 @@ export default async function (ctx) {
     };
   }
 
-  // ── 主屏 Small ────────────────────────────────────────────
+  // 小部件
   if (ctx.widgetFamily === 'systemSmall') {
     const BAR = 10;
     const f   = Math.round(ratio * BAR);
     const bar = '█'.repeat(f) + '░'.repeat(BAR - f);
-
     return {
       type: 'widget',
-      backgroundGradient: BG,
+      background: COLORS.bg,
       padding: 14,
       gap: 6,
       children: [
@@ -211,7 +196,7 @@ export default async function (ctx) {
           type: 'text',
           text: usedStr + ' / ' + totalStr,
           font: { size: 'caption2', weight: 'medium' },
-          textColor: { light: '#3C3C43', dark: '#EBEBF5' },
+          textColor: COLORS.subText,
           maxLines: 1,
           minScale: 0.8,
         },
@@ -225,7 +210,7 @@ export default async function (ctx) {
             {
               type: 'image',
               src: 'sf-symbol:arrow.clockwise',
-              color: { light: '#8E8E93', dark: '#8E8E93' },
+              color: COLORS.gray,
               width: 10,
               height: 10,
             },
@@ -234,7 +219,7 @@ export default async function (ctx) {
               date: resetISO,
               format: 'relative',
               font: { size: 'caption2' },
-              textColor: { light: '#8E8E93', dark: '#8E8E93' },
+              textColor: COLORS.gray,
               maxLines: 1,
             },
           ],
@@ -243,14 +228,14 @@ export default async function (ctx) {
     };
   }
 
-  // ── 主屏 Medium / Large ───────────────────────────────────
+  // 中/大号
   const BAR_LEN = 22;
   const filled  = Math.round(ratio * BAR_LEN);
   const barStr  = '█'.repeat(filled) + '░'.repeat(BAR_LEN - filled);
 
   return {
     type: 'widget',
-    backgroundGradient: BG,
+    background: COLORS.bg,
     padding: 16,
     gap: 8,
     children: [
@@ -271,7 +256,7 @@ export default async function (ctx) {
             type: 'text',
             text: 'BandwagonHost',
             font: { size: 'headline', weight: 'bold' },
-            textColor: { light: '#000000', dark: '#FFFFFF' },
+            textColor: COLORS.text,
             flex: 1,
             maxLines: 1,
           },
@@ -308,7 +293,7 @@ export default async function (ctx) {
             type: 'text',
             text: '已用',
             font: { size: 'subheadline' },
-            textColor: { light: '#8E8E93', dark: '#8E8E93' },
+            textColor: COLORS.gray,
           },
           {
             type: 'text',
@@ -320,7 +305,7 @@ export default async function (ctx) {
             type: 'text',
             text: '/ ' + totalStr,
             font: { size: 'subheadline' },
-            textColor: { light: '#8E8E93', dark: '#8E8E93' },
+            textColor: COLORS.gray,
           },
           { type: 'spacer' },
           {
@@ -340,7 +325,7 @@ export default async function (ctx) {
           {
             type: 'image',
             src: 'sf-symbol:tray.fill',
-            color: { light: '#8E8E93', dark: '#8E8E93' },
+            color: COLORS.gray,
             width: 12,
             height: 12,
           },
@@ -348,7 +333,7 @@ export default async function (ctx) {
             type: 'text',
             text: '剩余 ' + remainStr,
             font: { size: 'footnote' },
-            textColor: { light: '#8E8E93', dark: '#8E8E93' },
+            textColor: COLORS.subText,
           },
         ],
       },
@@ -362,7 +347,7 @@ export default async function (ctx) {
           {
             type: 'image',
             src: 'sf-symbol:arrow.clockwise.circle',
-            color: { light: '#8E8E93', dark: '#8E8E93' },
+            color: COLORS.gray,
             width: 13,
             height: 13,
           },
@@ -370,14 +355,14 @@ export default async function (ctx) {
             type: 'text',
             text: '重置日期：',
             font: { size: 'footnote' },
-            textColor: { light: '#8E8E93', dark: '#8E8E93' },
+            textColor: COLORS.gray,
           },
           {
             type: 'date',
             date: resetISO,
             format: 'date',
             font: { size: 'footnote', weight: 'medium' },
-            textColor: { light: '#000000', dark: '#FFFFFF' },
+            textColor: COLORS.text,
           },
           { type: 'spacer' },
           {
@@ -385,7 +370,7 @@ export default async function (ctx) {
             date: resetISO,
             format: 'relative',
             font: { size: 'footnote' },
-            textColor: { light: '#8E8E93', dark: '#8E8E93' },
+            textColor: COLORS.gray,
           },
         ],
       },
