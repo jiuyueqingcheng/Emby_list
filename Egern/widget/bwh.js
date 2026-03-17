@@ -18,25 +18,33 @@ export default async function (ctx) {
     return '#30D158';
   }
 
-  // 全局 iOS 深浅色定义
-  const COLORS = {
-    bg:      { light: '#F2F2F7', dark: '#1C1C1E' },
-    text:    { light: '#000000', dark: '#FFFFFF' },
-    subText: { light: '#3C3C43', dark: '#EBEBF5' },
-    gray:    { light: '#8E8E93', dark: '#8E8E93' },
+  // ===== 完全和黄历组件统一的 iOS 配色 =====
+  const C = {
+    bg:        { light: '#F2F2F7', dark: '#1C1C1E' },
+    title:     { light: '#000000', dark: '#FFFFFF' },
+    accent:    { light: '#007AFF', dark: '#007AFF' },
+    subtext:   { light: '#3C3C43', dark: '#EBEBF5' },
+    dimtext:   { light: '#686873', dark: '#8E8E93' },
+    fainttext: { light: '#8E8E93', dark: '#636366' },
+    bodytext:  { light: '#000000', dark: '#FFFFFF' },
+    resettext: { light: '#686873', dark: '#8E8E93' },
+    line:      { light: '#E5E5EA', dark: '#38383A' },
+    yiColor:   { light: '#FF3B30', dark: '#FF453A' },
+    jiColor:   { light: '#007AFF', dark: '#007AFF' },
+    star:      { light: '#FF9500', dark: '#FFCC00' }
   };
 
   function errorWidget(msg) {
     return {
       type: 'widget',
-      background: COLORS.bg,
+      background: C.bg,
       padding: 16,
       gap: 8,
       children: [
         {
           type: 'image',
           src: 'sf-symbol:exclamationmark.triangle.fill',
-          color: '#FF9F0A',
+          color: C.star,
           width: 22,
           height: 22,
         },
@@ -44,7 +52,7 @@ export default async function (ctx) {
           type: 'text',
           text: msg,
           font: { size: 'footnote' },
-          textColor: '#FF453A',
+          textColor: C.yiColor,
           maxLines: 3,
         },
       ],
@@ -104,7 +112,7 @@ export default async function (ctx) {
           type: 'text',
           text: 'BWH',
           font: { size: 'caption2' },
-          textColor: COLORS.gray,
+          textColor: C.fainttext,
           textAlign: 'center',
           maxLines: 1,
         },
@@ -123,14 +131,14 @@ export default async function (ctx) {
           type: 'text',
           text: 'BWH 流量监控',
           font: { size: 'headline', weight: 'bold' },
-          textColor: COLORS.text,
+          textColor: C.title,
           maxLines: 1,
         },
         {
           type: 'text',
           text: `已用 ${usedStr} / ${totalStr}  (${pct}%)`,
           font: { size: 'body' },
-          textColor: COLORS.subText,
+          textColor: C.subtext,
           maxLines: 1,
           minScale: 0.8,
         },
@@ -144,14 +152,14 @@ export default async function (ctx) {
               type: 'text',
               text: '重置：',
               font: { size: 'footnote' },
-              textColor: COLORS.gray,
+              textColor: C.fainttext,
             },
             {
               type: 'date',
               date: resetISO,
               format: 'relative',
               font: { size: 'footnote', weight: 'medium' },
-              textColor: COLORS.subText,
+              textColor: C.subtext,
             },
           ],
         },
@@ -159,14 +167,14 @@ export default async function (ctx) {
     };
   }
 
-  // 小部件 —— 进度条加长20%
+  // 小部件
   if (ctx.widgetFamily === 'systemSmall') {
     const BAR = 12;
     const f   = Math.round(ratio * BAR);
     const bar = '█'.repeat(f) + '░'.repeat(BAR - f);
     return {
       type: 'widget',
-      background: COLORS.bg,
+      background: C.bg,
       padding: 14,
       gap: 6,
       children: [
@@ -174,7 +182,7 @@ export default async function (ctx) {
           type: 'text',
           text: 'BandwagonHost',
           font: { size: 'caption1', weight: 'semibold' },
-          textColor: { light: '#007AFF', dark: '#64D2FF' },
+          textColor: C.accent,
           maxLines: 1,
           minScale: 0.7,
         },
@@ -196,7 +204,7 @@ export default async function (ctx) {
           type: 'text',
           text: usedStr + ' / ' + totalStr,
           font: { size: 'caption2', weight: 'medium' },
-          textColor: COLORS.subText,
+          textColor: C.subtext,
           maxLines: 1,
           minScale: 0.8,
         },
@@ -210,7 +218,7 @@ export default async function (ctx) {
             {
               type: 'image',
               src: 'sf-symbol:arrow.clockwise',
-              color: COLORS.gray,
+              color: C.fainttext,
               width: 10,
               height: 10,
             },
@@ -219,7 +227,7 @@ export default async function (ctx) {
               date: resetISO,
               format: 'relative',
               font: { size: 'caption2' },
-              textColor: COLORS.gray,
+              textColor: C.fainttext,
               maxLines: 1,
             },
           ],
@@ -228,14 +236,14 @@ export default async function (ctx) {
     };
   }
 
-  // 中/大号 —— 进度条加长20%
+  // 中/大号
   const BAR_LEN = 26;
   const filled  = Math.round(ratio * BAR_LEN);
   const barStr  = '█'.repeat(filled) + '░'.repeat(BAR_LEN - filled);
 
   return {
     type: 'widget',
-    background: COLORS.bg,
+    background: C.bg,
     padding: 16,
     gap: 8,
     children: [
@@ -248,7 +256,7 @@ export default async function (ctx) {
           {
             type: 'image',
             src: 'sf-symbol:server.rack',
-            color: { light: '#007AFF', dark: '#64D2FF' },
+            color: C.accent,
             width: 18,
             height: 18,
           },
@@ -256,7 +264,7 @@ export default async function (ctx) {
             type: 'text',
             text: 'BandwagonHost',
             font: { size: 'headline', weight: 'bold' },
-            textColor: COLORS.text,
+            textColor: C.title,
             flex: 1,
             maxLines: 1,
           },
@@ -293,7 +301,7 @@ export default async function (ctx) {
             type: 'text',
             text: '已用',
             font: { size: 'subheadline' },
-            textColor: COLORS.gray,
+            textColor: C.dimtext,
           },
           {
             type: 'text',
@@ -305,7 +313,7 @@ export default async function (ctx) {
             type: 'text',
             text: '/ ' + totalStr,
             font: { size: 'subheadline' },
-            textColor: COLORS.gray,
+            textColor: C.dimtext,
           },
           { type: 'spacer' },
           {
@@ -325,7 +333,7 @@ export default async function (ctx) {
           {
             type: 'image',
             src: 'sf-symbol:tray.fill',
-            color: COLORS.gray,
+            color: C.dimtext,
             width: 12,
             height: 12,
           },
@@ -333,7 +341,7 @@ export default async function (ctx) {
             type: 'text',
             text: '剩余 ' + remainStr,
             font: { size: 'footnote' },
-            textColor: COLORS.subText,
+            textColor: C.subtext,
           },
         ],
       },
@@ -347,7 +355,7 @@ export default async function (ctx) {
           {
             type: 'image',
             src: 'sf-symbol:arrow.clockwise.circle',
-            color: COLORS.gray,
+            color: C.dimtext,
             width: 13,
             height: 13,
           },
@@ -355,14 +363,14 @@ export default async function (ctx) {
             type: 'text',
             text: '重置日期：',
             font: { size: 'footnote' },
-            textColor: COLORS.gray,
+            textColor: C.dimtext,
           },
           {
             type: 'date',
             date: resetISO,
             format: 'date',
             font: { size: 'footnote', weight: 'medium' },
-            textColor: COLORS.text,
+            textColor: C.title,
           },
           { type: 'spacer' },
           {
@@ -370,7 +378,7 @@ export default async function (ctx) {
             date: resetISO,
             format: 'relative',
             font: { size: 'footnote' },
-            textColor: COLORS.gray,
+            textColor: C.fainttext,
           },
         ],
       },
