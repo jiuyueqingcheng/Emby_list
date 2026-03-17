@@ -159,9 +159,9 @@ export default async function (ctx) {
     };
   }
 
-  // 小部件
+  // 小部件 —— 进度条加长20%
   if (ctx.widgetFamily === 'systemSmall') {
-    const BAR = 10;
+    const BAR = 12;
     const f   = Math.round(ratio * BAR);
     const bar = '█'.repeat(f) + '░'.repeat(BAR - f);
     return {
@@ -228,8 +228,8 @@ export default async function (ctx) {
     };
   }
 
-  // 中/大号
-  const BAR_LEN = 22;
+  // 中/大号 —— 进度条加长20%
+  const BAR_LEN = 26;
   const filled  = Math.round(ratio * BAR_LEN);
   const barStr  = '█'.repeat(filled) + '░'.repeat(BAR_LEN - filled);
 
