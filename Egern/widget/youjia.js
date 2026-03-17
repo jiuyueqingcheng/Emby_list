@@ -13,16 +13,17 @@ export default async function (ctx) {
     const regionParam = ctx.env.GAS_REGION || ctx.env.region || "sichuan/chengdu"; 
     const SHOW_TREND = (ctx.env.SHOW_TREND || "true").trim() !== "false";
 
-    const BG_COLORS = [{ light: '#FFFFFF', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#0C0C0E' }]; 
-    const BLOCK_BG = { light: '#F2F2F7', dark: '#2C2C2E' }; 
-    const TEXT_MAIN = { light: '#1C1C1E', dark: '#FFFFFF' };
-    const TEXT_SUB = { light: '#48484A', dark: '#D1D1D6' }; 
+    // ✅ 完全 iOS 官方 浅色/深色 配色
+    const BG_COLORS = [{ light: '#F2F2F7', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#2C2C2E' }]; 
+    const BLOCK_BG = { light: '#FFFFFF', dark: '#2C2C2E' }; 
+    const TEXT_MAIN = { light: '#000000', dark: '#FFFFFF' };
+    const TEXT_SUB = { light: '#3C3C43', dark: '#EBEBF5' }; 
     const TEXT_MUTED = { light: '#8E8E93', dark: '#8E8E93' }; 
 
     const COLOR_GOLD = { light: '#B58A28', dark: '#D6A53A' }; 
-    const COLOR_RED = { light: '#CA3B32', dark: '#FF453A' };   
-    const COLOR_BLUE = { light: '#3A5F85', dark: '#5E8EB8' };  
-    const COLOR_TEAL = { light: '#628C7B', dark: '#73A491' };  
+    const COLOR_RED = { light: '#FF3B30', dark: '#FF453A' };   
+    const COLOR_BLUE = { light: '#007AFF', dark: '#007AFF' };  
+    const COLOR_TEAL = { light: '#34C759', dark: '#30D158' };  
 
     const CALENDAR_2026 = [
       {m: 1, d: 12}, {m: 1, d: 23}, {m: 2, d: 9},  {m: 2, d: 23}, {m: 3, d: 9},  {m: 3, d: 23}, {m: 4, d: 7},  {m: 4, d: 21}, 
@@ -109,7 +110,6 @@ export default async function (ctx) {
             ]},
             { type: "spacer" }, 
             
-            // 💎 右上角：统一字号为 11
             { type: "stack", direction: "row", alignItems: "center", children: [
                 { type: "text", text: "下轮调价: ", font: { size: 11, weight: "medium" }, textColor: infoColor },
                 { type: "text", text: nextAdjust.dateStr, font: { size: 11, weight: "bold" }, textColor: infoColor },
@@ -140,13 +140,11 @@ export default async function (ctx) {
           type: "stack", direction: "row", alignItems: "center",
           children: [
             { type: "stack", direction: "row", alignItems: "center", gap: 4, children: [
-                // 💎 左下角：统一图标 11，字号 11
                 { type: "image", src: "sf-symbol:arrow.triangle.2.circlepath", width: 11, height: 11, color: TEXT_MUTED },
                 { type: "text", text: updateTimeStr, font: { size: 11, weight: 'bold' }, textColor: TEXT_MUTED }
             ]},
             { type: "spacer" },
             { type: "stack", direction: "row", alignItems: "center", gap: 2, children: [
-                // 💎 右下角：统一字号为 11
                 { type: "text", text: "本轮调价: ", font: { size: 11, weight: 'medium' }, textColor: TEXT_MUTED },
                 { type: "text", text: trendInfo, font: { size: 11, weight: "bold" }, textColor: trendColor, lineLimit: 1, minScale: 0.7 }
             ]}
@@ -159,9 +157,15 @@ export default async function (ctx) {
     return {
       type: 'widget',
       padding: 12,
-      backgroundGradient: { type: 'linear', colors: [{ light: '#FFFFFF', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#0C0C0E' }], startPoint: { x:0, y:0 }, endPoint: { x:1, y:1 } },
+      // 异常页面也适配深浅模式
+      backgroundGradient: { 
+        type: 'linear', 
+        colors: [{ light: '#F2F2F7', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#2C2C2E' }], 
+        startPoint: { x:0, y:0 }, 
+        endPoint: { x:1, y:1 } 
+      },
       children: [
-        { type: 'text', text: '油价组件出现异常 ⚠️', font: { size: 14, weight: 'heavy' }, textColor: '#FF453A' },
+        { type: 'text', text: '油价组件异常 ⚠️', font: { size: 14, weight: 'heavy' }, textColor: '#FF453A' },
         { type: 'spacer', length: 4 },
         { type: 'text', text: String(err.message || err), font: { size: 12 }, textColor: '#FF453A', maxLines: 5 }
       ]
