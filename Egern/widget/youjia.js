@@ -1,6 +1,6 @@
 /**
  * ==========================================
- * 📌 代码名称: ⛽ 全国油价及调价预测（默认宁波）
+ * 📌 代码名称: ⛽ 全国油价及调价预测（默认成都）
  * ✨ 特色功能: 实时获取各标号油价及涨跌趋势；精简油价单位为 ¥/L；智能预告并精准倒数下轮调价窗口；支持模块化配置地区；支持点击跳转哈啰App；统一上下角标字号，像素级完美对齐。
  * 🔗 引用链接: https://raw.githubusercontent.com/jnlaoshu/MySelf/master/Egern/Widget/GasPrice.js
  * ⏱️ 更新时间: 2026.03.17 08:42
@@ -13,17 +13,18 @@ export default async function (ctx) {
     const regionParam = ctx.env.GAS_REGION || ctx.env.region || "zhejiang/ningbo"; 
     const SHOW_TREND = (ctx.env.SHOW_TREND || "true").trim() !== "false";
 
-    // ✅ 完全 iOS 官方 浅色/深色 配色
-    const BG_COLORS = [{ light: '#F2F2F7', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#2C2C2E' }]; 
-    const BLOCK_BG = { light: '#FFFFFF', dark: '#2C2C2E' }; 
-    const TEXT_MAIN = { light: '#000000', dark: '#FFFFFF' };
-    const TEXT_SUB = { light: '#3C3C43', dark: '#EBEBF5' }; 
-    const TEXT_MUTED = { light: '#8E8E93', dark: '#8E8E93' }; 
+    // 👉 严格按你要求：浅色 #F2F2F7 / 深色 #1C1C1E
+    const BG_COLORS = [{ light: '#F2F2F7', dark: '#1C1C1E' }];
+    const BLOCK_BG = { light: '#FFFFFF', dark: '#2C2C2E' };
 
-    const COLOR_GOLD = { light: '#B58A28', dark: '#D6A53A' }; 
-    const COLOR_RED = { light: '#FF3B30', dark: '#FF453A' };   
-    const COLOR_BLUE = { light: '#007AFF', dark: '#007AFF' };  
-    const COLOR_TEAL = { light: '#34C759', dark: '#30D158' };  
+    const TEXT_MAIN = { light: '#000000', dark: '#FFFFFF' };
+    const TEXT_SUB = { light: '#3C3C43', dark: '#EBEBF5' };
+    const TEXT_MUTED = { light: '#8E8E93', dark: '#8E8E93' };
+
+    const COLOR_GOLD = { light: '#B58A28', dark: '#D6A53A' };
+    const COLOR_RED = { light: '#FF3B30', dark: '#FF453A' };
+    const COLOR_BLUE = { light: '#007AFF', dark: '#007AFF' };
+    const COLOR_TEAL = { light: '#34C759', dark: '#30D158' };
 
     const CALENDAR_2026 = [
       {m: 1, d: 12}, {m: 1, d: 23}, {m: 2, d: 9},  {m: 2, d: 23}, {m: 3, d: 9},  {m: 3, d: 23}, {m: 4, d: 7},  {m: 4, d: 21}, 
@@ -157,10 +158,9 @@ export default async function (ctx) {
     return {
       type: 'widget',
       padding: 12,
-      // 异常页面也适配深浅模式
       backgroundGradient: { 
         type: 'linear', 
-        colors: [{ light: '#F2F2F7', dark: '#1C1C1E' }, { light: '#F5F5F9', dark: '#2C2C2E' }], 
+        colors: [{ light: '#F2F2F7', dark: '#1C1C1E' }], 
         startPoint: { x:0, y:0 }, 
         endPoint: { x:1, y:1 } 
       },
