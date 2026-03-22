@@ -136,12 +136,12 @@ DOMAIN-KEYWORD,ciallo.party
 #DOMAIN-KEYWORD,
 
 # > 稳健Emby
-DOMAIN-KEYWORD,emby.wenjian.de
-DOMAIN-KEYWORD,audio.hsu.life
-DOMAIN-KEYWORD,audio.wenjian.de
-DOMAIN-KEYWORD,music.wenjian.de
-DOMAIN-KEYWORD,yin.wenjian.de
-DOMAIN-KEYWORD,book.wenjian.de
+#DOMAIN-KEYWORD,emby.wenjian.de
+#DOMAIN-KEYWORD,audio.hsu.life
+#DOMAIN-KEYWORD,audio.wenjian.de
+#DOMAIN-KEYWORD,music.wenjian.de
+#DOMAIN-KEYWORD,yin.wenjian.de
+#DOMAIN-KEYWORD,book.wenjian.de
 
 # > 片刻影视解说
 #DOMAIN-KEYWORD,
