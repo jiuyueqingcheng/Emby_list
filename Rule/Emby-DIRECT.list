@@ -1,4 +1,4 @@
-# > 冰镇西瓜
+.# > 冰镇西瓜
 #DOMAIN-KEYWORD,emby.chilledmelon.com
 DOMAIN-KEYWORD,cf.xgua.de
 DOMAIN-KEYWORD,cf.icgua.de
@@ -76,7 +76,7 @@ DOMAIN-KEYWORD,bai3.yezi.my
 #DOMAIN-KEYWORD,
 
 # > Emby for  L
-DOMAIN-KEYWORD,cf.lemby.me
+#DOMAIN-KEYWORD,cf.lemby.me
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
