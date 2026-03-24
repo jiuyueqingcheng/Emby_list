@@ -39,8 +39,9 @@ DOMAIN-KEYWORD,fworks-emby.sylu.net
 DOMAIN-KEYWORD,emby.feiniu.lol
 
 # > 一之濑琴美的电视台
-#DOMAIN-KEYWORD,speedtestemby.ichinosekotomi.vip
-#DOMAIN-KEYWORD,embygy.ichinosekotomi.com
+DOMAIN-KEYWORD,ichinosekotomi
+DOMAIN-KEYWORD,emby.ichinosekotomi.com
+#DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 
