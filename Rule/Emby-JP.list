@@ -1,17 +1,5 @@
-# > 冰镇西瓜
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-
-# > 冰镇西瓜
-#DOMAIN,
+# > HKA
+DOMAIN,hka-emby.aliz.work
 #DOMAIN,
 #DOMAIN,
 #DOMAIN,
@@ -22,8 +10,8 @@
 #DOMAIN,
 #DOMAIN,
 
-# > 冰镇西瓜
-#DOMAIN,
+# > 憨豆
+DOMAIN,a1.handoumedia.top
 #DOMAIN,
 #DOMAIN,
 #DOMAIN,
@@ -34,8 +22,20 @@
 #DOMAIN,
 #DOMAIN,
 
-# > 冰镇西瓜
+# > 肥牛
+DOMAIN,emby.feiniu.lol
 #DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+#DOMAIN,
+
+# > 一之濑琴美的电视台
+DOMAIN,emby.ichinosekotomi.com
 #DOMAIN,
 #DOMAIN,
 #DOMAIN,
