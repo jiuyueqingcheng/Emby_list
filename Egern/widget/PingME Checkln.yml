@@ -61,7 +61,7 @@ http_captures:
 scriptings:
   - http_request:
       name: "PingME 账号抓取"
-      match: "^https:\/\/api\.pingmeapp\.net\/app\/queryBalanceAndBonus"
+      match: "^https://api\\.pingmeapp\\.com/app/queryBalanceAndBonus"
       script_url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/cookie/get_cookie.js"
       timeout: 10
 
