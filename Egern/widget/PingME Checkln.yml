@@ -53,10 +53,10 @@ env_schema:
 
 mitm:
   hostnames:
-    - "api.wetalkapp.com"
+    - "api.pingmeapp.net"
 
 http_captures:
-  - "api.wetalkapp.com"
+  - "api.pingmeapp.net"
 
 scriptings:
   - http_request:
