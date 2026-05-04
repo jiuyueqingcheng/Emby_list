@@ -264,13 +264,13 @@ DOMAIN,pieclip.okbap.com
 
 # > 稳健
 DOMAIN,m.wenjian.de
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
-#DOMAIN,
+DOMAIN,audio.hsu.life
+DOMAIN,audio.wenjian.de
+DOMAIN,music.wenjian.de
+DOMAIN,yin.wenjian.de
+DOMAIN,book.wenjian.de
+DOMAIN,book.hsu.life
+DOMAIN,komga.wenjian.de
 #DOMAIN,
 #DOMAIN,
 
