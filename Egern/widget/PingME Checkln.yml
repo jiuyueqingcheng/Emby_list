@@ -68,5 +68,5 @@ scriptings:
   - schedule:
       name: "PingME 签到任务"
       cron: "0 */4 * * *"
-      script_url: "https://github.com/158212892/QuantumultXMark/raw/refs/heads/main/My/Scripts/WeTalk_task.js"
+      script_url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/PingMe/PingMeSignin.js"
       timeout: 120
