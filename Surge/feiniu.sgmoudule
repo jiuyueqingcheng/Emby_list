@@ -1,4 +1,4 @@
-#!name=Custom Hosts
+#!name=肥牛Emby Hosts
 
 [Host]
 emby.feiniu.lol = 104.16.134.229
