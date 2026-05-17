@@ -1,0 +1,4 @@
+#!name=Custom Hosts
+
+[Host]
+emby.feiniu.lol = 104.16.134.229
