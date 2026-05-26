@@ -1,8 +1,8 @@
 # > 冰镇西瓜
 #DOMAIN-KEYWORD,emby.chilledmelon.com
-DOMAIN-KEYWORD,cf.xgua.de
-DOMAIN-KEYWORD,cf.icgua.de
-DOMAIN-KEYWORD,cf.icegua.de
+DOMAIN,cf.xgua.de
+DOMAIN,cf.icgua.de
+DOMAIN,cf.icegua.de
 #DOMAIN-KEYWORD,rn.chilledmelon.com
 #DOMAIN-KEYWORD,mr.chilledmelon.com
 #DOMAIN-KEYWORD,seoul.chilledmelon.com
@@ -11,10 +11,10 @@ DOMAIN-KEYWORD,cf.icegua.de
 #DOMAIN-KEYWORD,fra.chilledmelon.com
 
 # > 反集邮
-DOMAIN-KEYWORD,emby.hlxll.top
+DOMAIN,emby.hlxll.top
 
 # > 气鼠了
-DOMAIN-KEYWORD,emby.istyboe.top
+DOMAIN,emby.istyboe.top
 
 # > OKEmby
 #DOMAIN-KEYWORD,link00.okemby.org
@@ -31,7 +31,7 @@ DOMAIN-KEYWORD,46.3.109.178
 #DOMAIN-KEYWORD,chpro.feiyue.lol
 
 # > 片刻影视解说
-DOMAIN-KEYWORD,pieclip.okbap.com
+DOMAIN,pieclip.okbap.com
 
 # > YounoEmby
 #DOMAIN-KEYWORD,jp.younoyes.com
@@ -48,25 +48,25 @@ DOMAIN-KEYWORD,pieclip.okbap.com
 #DOMAIN-KEYWORD,
 
 # > 叶子HDemby
-DOMAIN-KEYWORD,gm.yezi.my
+DOMAIN,gm.yezi.my
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 
 # > Embydada
-#DOMAIN-KEYWORD,10520.xyz
+#DOMAIN,10520.xyz
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 
 # > 叶子emby
-DOMAIN-KEYWORD,bai.yezi.my
-DOMAIN-KEYWORD,bai2.yezi.my
-DOMAIN-KEYWORD,bai1.yezi.my
-DOMAIN-KEYWORD,bai6.yezi.my
-DOMAIN-KEYWORD,bai3.yezi.my
+DOMAIN,bai.yezi.my
+DOMAIN,bai2.yezi.my
+DOMAIN,bai1.yezi.my
+DOMAIN,bai6.yezi.my
+DOMAIN,bai3.yezi.my
 
 # > nayovO
 #DOMAIN-KEYWORD,nay.007.us.kg
@@ -83,7 +83,7 @@ DOMAIN-KEYWORD,bai3.yezi.my
 #DOMAIN-KEYWORD,
 
 # > TFTV
-DOMAIN-KEYWORD,yong9.de
+DOMAIN,yong9.de
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
@@ -97,11 +97,11 @@ DOMAIN-KEYWORD,yong9.de
 #DOMAIN-KEYWORD,
 
 # > 反代线路
-DOMAIN-KEYWORD,emby.772778.xyz
-DOMAIN-KEYWORD,772778.xyz
-DOMAIN-KEYWORD,emby.noomi.eu.cc
-DOMAIN-SUFFIX,fandai.cnvip.ddns-ip.net
-DOMAIN-KEYWORD,xf.isvip.ddns-ip.net
+DOMAIN,emby.772778.xyz
+DOMAIN,772778.xyz
+DOMAIN,emby.noomi.eu.cc
+DOMAIN,fandai.cnvip.ddns-ip.net
+DOMAIN,xf.isvip.ddns-ip.net
 
 # > HG
 #DOMAIN-KEYWORD,emby.dnscf.dpdns.org
@@ -111,8 +111,8 @@ DOMAIN-KEYWORD,xf.isvip.ddns-ip.net
 #DOMAIN-KEYWORD,
 
 # > Nya
-DOMAIN-KEYWORD,ap-cn01.emby.bangumi.ca
-DOMAIN-KEYWORD,ap-cn02.emby.bangumi.ca
+DOMAIN,ap-cn01.emby.bangumi.ca
+DOMAIN,ap-cn02.emby.bangumi.ca
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
@@ -125,14 +125,14 @@ DOMAIN-KEYWORD,ap-cn02.emby.bangumi.ca
 #DOMAIN-KEYWORD,
 
 # > 小姨子
-DOMAIN-KEYWORD,gy1.emby.yun
-DOMAIN-KEYWORD,gy2.emby.yun
-DOMAIN-KEYWORD,gy3.emby.yun
-DOMAIN-KEYWORD,gy.fxtbjmqslr.cn
-DOMAIN-KEYWORD,gy.emby.yun
+DOMAIN,gy1.emby.yun
+DOMAIN,gy2.emby.yun
+DOMAIN,gy3.emby.yun
+DOMAIN,gy.fxtbjmqslr.cn
+DOMAIN,gy.emby.yun
 
 # > 105
-DOMAIN-KEYWORD,ciallo.party
+DOMAIN,ciallo.party
 #DOMAIN-KEYWORD,
 
 # > 稳健Emby
@@ -151,14 +151,14 @@ DOMAIN-KEYWORD,ciallo.party
 #DOMAIN-KEYWORD,
 
 # > 结束
-DOMAIN-KEYWORD,kessoku-bando.biliblili.uk
+DOMAIN,kessoku-bando.biliblili.uk
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 
 # > 屿森公益
-DOMAIN-KEYWORD,hcyykj-eos-hhht5-01.eos.huhehaote-8.cmecloud.cn
+DOMAIN,hcyykj-eos-hhht5-01.eos.huhehaote-8.cmecloud.cn
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
 #DOMAIN-KEYWORD,
