@@ -1,0 +1,35 @@
+#!name=WPS签到
+#!desc=WPS自动获取Cookie并每日签到（参数化版）
+#!author=MaYIHEI
+#!homepage=https://github.com/MaYIHEI/paperclip
+#!icon=https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/wps.png
+#!arguments:
+#!  WPSCookie:
+#!    type: boolean
+#!    default: true
+#!    description: 是否开启WPS Cookie获取
+#!  WPSCron:
+#!    type: string
+#!    default: "0 10 * * *"
+#!    description: WPS签到执行时间
+#!  FetchTimeout:
+#!    type: number
+#!    default: 35
+#!    description: 脚本超时时间（秒）
+http:
+  mitm:
+    - personal-act.wps.cn
+script:
+  - match: ^https:\/\/personal-act\.wps\.cn\/activity-rubik\/activity\/page_info
+    name: WPS Cookie
+    type: request
+    require-body: false
+    timeout: "{{{ FetchTimeout }}}"
+    enable: "{{{ WPSCookie }}}"
+    script-url: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/wps/wps.cookie.js
+cron:
+  - name: WPS签到
+    cron: "{{{ WPSCron }}}"
+    timeout: "{{{ FetchTimeout }}}"
+    wake-system: true
+    script-url: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/wps/wps.js
