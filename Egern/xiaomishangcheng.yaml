@@ -2,7 +2,7 @@ name: 小米商城 签到与 Cookie 获取
 description: 小米商城自动签到及 Cookie 获取模块，支持自定义签到定时与脚本超时时间。
 compat_arguments:
   MiShopCookie: 'true'
-  MiShopCron: 15 8 * * *
+  MiShopCron: 02 8 * * *
   FetchTimeout: '35'
 compat_arguments_schema:
   MiShopCookie:
@@ -32,7 +32,7 @@ dns: {}
 scriptings:
   - schedule:
       name: 小米商城签到
-      cron: 15 8 * * *
+      cron: 02 8 * * *
       script_url: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js
       timeout: 60
   - http_request:
