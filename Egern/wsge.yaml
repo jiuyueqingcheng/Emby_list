@@ -2,7 +2,7 @@ name: 网上国网 签到与Cookie获取
 description: 网上国网自动签到及Cookie抓取模块，支持自定义签到定时、抓包开关、脚本超时时间
 compat_arguments:
   SgccCookie: 'true'
-  SgccCron: 30 8 * * *
+  SgccCron: 02 8 * * *
   FetchTimeout: '35'
 compat_arguments_schema:
   SgccCookie:
@@ -33,7 +33,7 @@ scriptings:
   # 定时签到任务
   - schedule:
       name: 网上国网签到
-      cron: 30 8 * * *
+      cron: 02 8 * * *
       script_url: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/sgcc/sgcc.js
       timeout: 60
   # MITM抓Cookie拦截脚本
