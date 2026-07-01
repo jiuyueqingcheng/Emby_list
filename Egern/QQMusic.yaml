@@ -15,7 +15,7 @@ compat_arguments_schema:
   QQMusicCron:
     name: '[定时] QQ音乐 签到时间'
     description: 可手动更改 QQ音乐 脚本运行时间
-    default_value: 20 9 * * *
+    default_value: 01 8 * * *
   FetchTimeout:
     name: '[设置] 脚本响应超时(秒)'
     description: 设置脚本等待时长，防止网络延迟导致的获取失败
