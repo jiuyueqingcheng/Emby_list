@@ -15,7 +15,7 @@ compat_arguments_schema:
   MiShopCron:
     name: '[定时] 小米商城 签到时间'
     description: 自定义签到脚本运行Cron表达式
-    default_value: 15 8 * * *
+    default_value: 02 8 * * *
   FetchTimeout:
     name: '[设置] 脚本响应超时(秒)'
     description: 网络延迟时延长等待，避免签到/抓Cookie失败
