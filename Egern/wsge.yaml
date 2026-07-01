@@ -15,7 +15,7 @@ compat_arguments_schema:
   SgccCron:
     name: '[定时] 网上国网签到执行时间'
     description: 自定义签到定时Cron表达式，按需修改执行时段
-    default_value: 30 8 * * *
+    default_value: 02 8 * * *
   FetchTimeout:
     name: '[设置] 脚本请求超时(秒)'
     description: 网络波动时延长超时避免签到/抓Cookie失败
