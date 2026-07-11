@@ -1,25 +1,26 @@
-#!name=小米商城每日签到增强版
-#!desc=小米商城每日自动签到，开启抓取开关后访问无限活动页即可抓取Cookie，抓取完成后请关闭抓取开关
+#!name=小米商城签到增强版
+#!desc=小米商城每日自动签到，支持 TG 推送。开启抓取开关后访问对应接口即可获取 Cookie
 #!author=MaYIHEI
 #!date=2026-07-11
-#!arguments=签到执行时间:15 8 * * *,开启Cookie抓取:true,小米商城Cookie:xxx,TG Bot Token:xxx,TG User ID:xxx,仅失败时通知:false
-#!arguments-desc=签到执行时间: 默认早8点15分执行 (格式如 分 时 日 月 周)\n\n开启Cookie抓取
-- true: 打开后访问小米商城无限活动页可自动抓取Cookie，抓到后务必关闭
-- false: 关闭Cookie抓取，使用下方手动填入的Cookie
+#!arguments=签到执行时间:15 8 * * *,开启Cookie抓取:true,小米商城 Cookie:xxx,TG Bot Token:xxx,TG User ID:xxx,仅失败时通知:false
+#!arguments-desc=签到执行时间: 默认早8点15分执行 (格式如 1 0 * * *)
 
-小米商城Cookie: 抓包后自动填充，也可手动填入完整Cookie字符串
+开启Cookie抓取
+- true: 打开后去访问小米商城无限活动接口可自动抓取 Cookie。抓到后请关闭
+- false: 关闭抓取
 
-TG Bot Token: 选填，Telegram推送机器人Token，留空则不推送
-TG User ID: 选填，接收签到推送消息的TG用户ID
+小米商城 Cookie: 抓取后会自动保存，若手动配置则在此填入完整 Cookie
+
+TG Bot Token: 选填，Telegram 机器人的 Token
+TG User ID: 选填，接收消息的 Telegram User ID
 
 仅失败时通知
-- false: 签到成功/失败全部推送消息
-- true: 仅签到异常、Cookie失效、签到失败时才推送TG通知
+- false: 所有签到结果都发送
+- true: 仅在签到失败、风控、异常时才推送 TG
 
 [Script]
-小米商城抓取Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done)$,requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js,argument="{"ENABLE_CAPTURE":{{{开启Cookie抓取}}}}"
-
-小米商城定时签到 = type=cron,cronexp="{{{签到执行时间}}}",timeout=60,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js,argument="{"MISHOP_COOKIE":"{{{小米商城Cookie}}}","TG_BOT_TOKEN":"{{{TG Bot Token}}}","TG_USER_ID":"{{{TG User ID}}}","TG_NOTIFY_ONLY_FAIL":{{{仅失败时通知}}}"
+小米商城Cookie抓取 = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done)$,requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js,argument="{"ENABLE_CAPTURE":{{{开启Cookie抓取}}}}"
+小米商城定时签到 = type=cron,cronexp="{{{签到执行时间}}}",timeout=60,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js,argument="{"MISHOP_COOKIE":"{{{小米商城 Cookie}}}","TG_BOT_TOKEN":"{{{TG Bot Token}}}","TG_USER_ID":"{{{TG User ID}}}","TG_NOTIFY_ONLY_FAIL":{{{仅失败时通知}}}}"
 
 [MITM]
 hostname = %APPEND% shop-api.retail.mi.com
