@@ -1,19 +1,17 @@
 #!name=小米商城
-#!desc=小米商城自动签到模块。支持通过参数配置开启或关闭 Cookie 获取功能（默认关闭，获取成功后建议保持关闭）。
-#!argument=cookie_capture:[true|false],default=false,title=开启 Cookie 采集,desc=需要获取 Cookie 时请开启此开关。获取成功后请关闭以节省性能。
+#!desc=小米商城自动签到模块。点击“编辑参数”可控制 Cookie 获取开关。
+#!arguments=Cookie获取开关:1
 #!category=签到
 #!icon=https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
 #!author=MaYIHEI
 
 [MITM]
-# 仅在参数 cookie_capture 为 true 时才激活该主机的 MITM
-hostname = %APPEND% {% if cookie_capture == "true" %}shop-api.retail.mi.com{% endif %}
+# 始终追加主机名，但通过重写规则中的变量判定拦截行为
+hostname = %APPEND% shop-api.retail.mi.com
 
 [Script]
-# 小米商城 Cookie 采集（使用参数控制：仅在开启开关时拦截请求）
-{% if cookie_capture == "true" %}
-小米商城 Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done),requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js
-{% endif %}
+# 小米商城 Cookie 采集 (参数为 1 时获取，为 0 时跳过。可在编辑参数中修改)
+小米商城 Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done),requires-body=false,max-size=0,argument=%Cookie获取开关%,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js
 
-# 小米商城自动签到（定时任务不受开关影响，始终保持运行）
+# 小米商城自动签到（定时任务不受开关影响）
 小米商城签到 = type=cron,cronexp="15 8 * * *",timeout=60,wake-system=true,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js
