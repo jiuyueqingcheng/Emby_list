@@ -1,17 +1,20 @@
-#!name=小米商城
-#!desc=小米商城自动签到模块。点击“编辑参数”可控制 Cookie 获取开关。
-#!arguments=Cookie获取开关:1
-#!category=签到
-#!icon=https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
+#!name=小米商城 签到增强版
+#!desc=小米商城每日自动签到。开启抓取开关后在 App 内操作即可获取 Cookie。
 #!author=MaYIHEI
-
-[MITM]
-# 始终追加主机名，但通过重写规则中的变量判定拦截行为
-hostname = %APPEND% shop-api.retail.mi.com
+#!icon=https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
+#!arguments=签到执行时间:15 8 * * *,开启Cookie抓取:false
+#!arguments-desc=签到执行时间: 默认每天早上 08:15 执行 (格式如 15 8 * * *)\n\n开启Cookie抓取\n- true: 打开后去小米商城 App 操作可自动抓取 Cookie。抓到后请务必关闭\n- false: 关闭抓取，节省流量和性能
 
 [Script]
-# 小米商城 Cookie 采集 (参数为 1 时获取，为 0 时跳过。可在编辑参数中修改)
-小米商城 Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done),requires-body=false,max-size=0,argument=%Cookie获取开关%,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js
+# 小米商城 Cookie 采集 (将参数传入脚本内部判断，并利用 Surge 动态条件判断控制是否生效)
+# 当开启Cookie抓取为 true 时，Surge 才会对匹配请求应用此重写
+{% if 开启Cookie抓取 == "true" %}
+小米商城 Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done),requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js,argument="{"ENABLE_CAPTURE":{{{开启Cookie抓取}}}}"
+{% endif %}
 
-# 小米商城自动签到（定时任务不受开关影响）
-小米商城签到 = type=cron,cronexp="15 8 * * *",timeout=60,wake-system=true,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js
+# 小米商城自动签到（定时任务不受开关影响，时间读取自定义参数）
+小米商城签到 = type=cron,cronexp="{{{签到执行时间}}}",timeout=60,wake-system=true,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js
+
+[MITM]
+# 同样使用动态条件判断，只有开启抓取时才解密该域名，平时关闭不耗费性能
+hostname = %APPEND% {% if 开启Cookie抓取 == "true" %}shop-api.retail.mi.com{% endif %}
