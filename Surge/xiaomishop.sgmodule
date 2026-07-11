@@ -1,20 +1,25 @@
-#!name=小米商城 签到增强版
-#!desc=小米商城每日自动签到。开启抓取开关后在 App 内操作即可获取 Cookie。
+#!name=小米商城每日签到增强版
+#!desc=小米商城每日自动签到，开启抓取开关后访问无限活动页即可抓取Cookie，抓取完成后请关闭抓取开关
 #!author=MaYIHEI
-#!icon=https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
-#!arguments=签到执行时间:15 8 * * *,开启Cookie抓取:false
-#!arguments-desc=签到执行时间: 默认每天早上 08:15 执行 (格式如 15 8 * * *)\n\n开启Cookie抓取\n- true: 打开后去小米商城 App 操作可自动抓取 Cookie。抓到后请务必关闭\n- false: 关闭抓取，节省流量和性能
+#!date=2026-07-11
+#!arguments=签到执行时间:15 8 * * *,开启Cookie抓取:true,小米商城Cookie:xxx,TG Bot Token:xxx,TG User ID:xxx,仅失败时通知:false
+#!arguments-desc=签到执行时间: 默认早8点15分执行 (格式如 分 时 日 月 周)\n\n开启Cookie抓取
+- true: 打开后访问小米商城无限活动页可自动抓取Cookie，抓到后务必关闭
+- false: 关闭Cookie抓取，使用下方手动填入的Cookie
+
+小米商城Cookie: 抓包后自动填充，也可手动填入完整Cookie字符串
+
+TG Bot Token: 选填，Telegram推送机器人Token，留空则不推送
+TG User ID: 选填，接收签到推送消息的TG用户ID
+
+仅失败时通知
+- false: 签到成功/失败全部推送消息
+- true: 仅签到异常、Cookie失效、签到失败时才推送TG通知
 
 [Script]
-# 小米商城 Cookie 采集 (将参数传入脚本内部判断，并利用 Surge 动态条件判断控制是否生效)
-# 当开启Cookie抓取为 true 时，Surge 才会对匹配请求应用此重写
-{% if 开启Cookie抓取 == "true" %}
-小米商城 Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done),requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js,argument="{"ENABLE_CAPTURE":{{{开启Cookie抓取}}}}"
-{% endif %}
+小米商城抓取Cookie = type=http-request,pattern=^https:\/\/shop-api\.retail\.mi\.com\/mtop\/mf\/act\/infinite\/(do|done)$,requires-body=false,max-size=0,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.cookie.js,argument="{"ENABLE_CAPTURE":{{{开启Cookie抓取}}}}"
 
-# 小米商城自动签到（定时任务不受开关影响，时间读取自定义参数）
-小米商城签到 = type=cron,cronexp="{{{签到执行时间}}}",timeout=60,wake-system=true,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js
+小米商城定时签到 = type=cron,cronexp="{{{签到执行时间}}}",timeout=60,script-path=https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/mishop/mishop.js,argument="{"MISHOP_COOKIE":"{{{小米商城Cookie}}}","TG_BOT_TOKEN":"{{{TG Bot Token}}}","TG_USER_ID":"{{{TG User ID}}}","TG_NOTIFY_ONLY_FAIL":{{{仅失败时通知}}}"
 
 [MITM]
-# 同样使用动态条件判断，只有开启抓取时才解密该域名，平时关闭不耗费性能
-hostname = %APPEND% {% if 开启Cookie抓取 == "true" %}shop-api.retail.mi.com{% endif %}
+hostname = %APPEND% shop-api.retail.mi.com
