@@ -1,0 +1,43 @@
+name: 小米商城抽奖
+description: 小米商城每日自动抽奖，访问活动页面自动抓取账号Cookie，每日8:30定时执行抽奖
+compat_arguments:
+  PingMeCookie: 'true'
+  PingMeCron: 30 8 * * *
+  FetchTimeout: '240'
+compat_arguments_schema:
+  PingMeCookie:
+    name: '[开关] 抓取小米商城Cookie'
+    description: 开启后访问商城活动接口自动捕获账号Cookie，获取完成可关闭节省资源
+    default_value: 'true'
+    options:
+      - 'true'
+      - 'false'
+  PingMeCron:
+    name: '[定时] 抽奖执行时间'
+    description: 自定义每日抽奖定时，标准cron格式
+    default_value: 30 8 * * *
+  FetchTimeout:
+    name: '[设置] 脚本请求超时(秒)'
+    description: 抽奖接口最大等待时长
+    default_value: '240'
+
+mitm:
+  hostnames:
+    - shop-api.retail.mi.com
+
+scripts:
+  - name: 小米抽奖 Cookie
+    type: http-request
+    pattern: ^https:\/\/shop-api\.retail\.mi\.com\/mtop\/navi\/venue\/batch
+    requires-body: true
+    max-size: 0
+    script-path: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/milottery/milottery.js
+    img-url: https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
+
+  - name: 小米抽奖签到
+    type: cron
+    cronexp: 30 8 * * *
+    timeout: 240
+    script-path: https://raw.githubusercontent.com/MaYIHEI/paperclip/refs/heads/main/app/milottery/milottery.js
+    img-url: https://raw.githubusercontent.com/MaYIHEI/pin/refs/heads/main/app/mishop.png
+    enable: true
