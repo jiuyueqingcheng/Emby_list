@@ -8,4 +8,4 @@
 Bandwagon-VPS = script-name=Bandwagon-VPS,update-interval={{{INTERVAL}}}
 
 [Script]
-Bandwagon-VPS = type=generic,timeout=15,script-path=https://你的GitHub用户名.github.io/你的仓库/bwg-traffic.js,script-update-interval=86400,argument=veid={{{VEID}}}&apikey={{{APIKEY}}}&title={{{TITLE}}}
+Bandwagon-VPS = type=generic,timeout=15,script-path=https://raw.githubusercontent.com/jiuyueqingcheng/Emby_list/refs/heads/main/Surge/mianban/bwg-traffic.js,script-update-interval=86400,argument=veid={{{VEID}}}&apikey={{{APIKEY}}}&title={{{TITLE}}}
