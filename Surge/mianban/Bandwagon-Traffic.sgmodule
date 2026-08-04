@@ -1,0 +1,11 @@
+#!name=搬瓦工 VPS 流量
+#!desc=在 Surge 面板显示搬瓦工 VPS 剩余流量
+#!system=ios
+#!category=面板
+#!arguments=VEID,APIKEY,TITLE:Bandwagon VPS,INTERVAL:3600
+
+[Panel]
+Bandwagon-VPS = script-name=Bandwagon-VPS,update-interval={{{INTERVAL}}}
+
+[Script]
+Bandwagon-VPS = type=generic,timeout=15,script-path=https://你的GitHub用户名.github.io/你的仓库/bwg-traffic.js,script-update-interval=86400,argument=veid={{{VEID}}}&apikey={{{APIKEY}}}&title={{{TITLE}}}
