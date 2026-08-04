@@ -4,9 +4,10 @@
  * ============================================================
  *
  * 显示：
+ *
  *  - VPS 状态
- *  - 本月流量：已用 / 总流量（已用百分比）
  *  - 今日流量
+ *  - 本月流量：已用 / 总流量（已用百分比）
  *  - 内存：已用 / 总内存（使用百分比）
  *  - 开机时间
  *  - 运行时长
@@ -27,17 +28,23 @@
 
 const args = parseArgs($argument);
 
-const VEID = args.veid || "";
-const APIKEY = args.apikey || "";
-const TITLE = args.title || "🇺🇸 BWH VPS";
+const VEID =
+    args.veid || "";
 
-const API_BASE = "https://api.64clouds.com/v1/";
+const APIKEY =
+    args.apikey || "";
+
+const TITLE =
+    args.title || "🇺🇸 BWH VPS";
+
+const API_BASE =
+    "https://api.64clouds.com/v1/";
 
 
 /*
- * ------------------------------------------------------------
+ * ============================================================
  * 参数检查
- * ------------------------------------------------------------
+ * ============================================================
  */
 
 if (!VEID || !APIKEY) {
@@ -56,9 +63,9 @@ if (!VEID || !APIKEY) {
 
 
 /*
- * ------------------------------------------------------------
+ * ============================================================
  * 获取 VPS 基础信息
- * ------------------------------------------------------------
+ * ============================================================
  */
 
 function getServiceInfo() {
@@ -66,27 +73,37 @@ function getServiceInfo() {
     const url =
         API_BASE +
         "getServiceInfo" +
-        "?veid=" + encodeURIComponent(VEID) +
-        "&api_key=" + encodeURIComponent(APIKEY);
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
+        encodeURIComponent(APIKEY);
+
 
     $httpClient.get(
         {
             url: url,
             timeout: 15
         },
-        function (error, response, body) {
+
+        function (
+            error,
+            response,
+            body
+        ) {
 
             if (error) {
 
                 panel(
                     TITLE,
-                    "❌ 获取 VPS 信息失败\n" + error,
+                    "❌ 获取 VPS 信息失败\n" +
+                    error,
                     "wifi.exclamationmark",
                     "#FF3B30"
                 );
 
                 return;
             }
+
 
             if (!body) {
 
@@ -100,11 +117,14 @@ function getServiceInfo() {
                 return;
             }
 
+
             let service;
+
 
             try {
 
-                service = JSON.parse(body);
+                service =
+                    JSON.parse(body);
 
             } catch (e) {
 
@@ -118,7 +138,12 @@ function getServiceInfo() {
                 return;
             }
 
-            if (Number(service.error || 0) !== 0) {
+
+            if (
+                Number(
+                    service.error || 0
+                ) !== 0
+            ) {
 
                 panel(
                     TITLE,
@@ -131,50 +156,65 @@ function getServiceInfo() {
                 return;
             }
 
-            getLiveServiceInfo(service);
+
+            getLiveServiceInfo(
+                service
+            );
         }
     );
 }
 
 
 /*
- * ------------------------------------------------------------
+ * ============================================================
  * 获取实时 VPS 信息
- *
- * 用于：
- *  - VPS 状态
- *  - 当前可用内存
- * ------------------------------------------------------------
+ * ============================================================
  */
 
-function getLiveServiceInfo(service) {
+function getLiveServiceInfo(
+    service
+) {
 
     const url =
         API_BASE +
         "getLiveServiceInfo" +
-        "?veid=" + encodeURIComponent(VEID) +
-        "&api_key=" + encodeURIComponent(APIKEY);
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
+        encodeURIComponent(APIKEY);
+
 
     $httpClient.get(
         {
             url: url,
             timeout: 20
         },
-        function (error, response, body) {
+
+        function (
+            error,
+            response,
+            body
+        ) {
 
             let live = {};
 
-            if (!error && body) {
+
+            if (
+                !error &&
+                body
+            ) {
 
                 try {
 
-                    live = JSON.parse(body);
+                    live =
+                        JSON.parse(body);
 
                 } catch (e) {
 
                     live = {};
                 }
             }
+
 
             getRawUsageStats(
                 service,
@@ -186,11 +226,9 @@ function getLiveServiceInfo(service) {
 
 
 /*
- * ------------------------------------------------------------
- * 获取原始流量统计
- *
- * 用于计算今日流量
- * ------------------------------------------------------------
+ * ============================================================
+ * 获取流量统计
+ * ============================================================
  */
 
 function getRawUsageStats(
@@ -201,23 +239,36 @@ function getRawUsageStats(
     const url =
         API_BASE +
         "getRawUsageStats" +
-        "?veid=" + encodeURIComponent(VEID) +
-        "&api_key=" + encodeURIComponent(APIKEY);
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
+        encodeURIComponent(APIKEY);
+
 
     $httpClient.get(
         {
             url: url,
             timeout: 20
         },
-        function (error, response, body) {
+
+        function (
+            error,
+            response,
+            body
+        ) {
 
             let stats = {};
 
-            if (!error && body) {
+
+            if (
+                !error &&
+                body
+            ) {
 
                 try {
 
-                    stats = JSON.parse(body);
+                    stats =
+                        JSON.parse(body);
 
                 } catch (e) {
 
@@ -225,11 +276,15 @@ function getRawUsageStats(
                 }
             }
 
+
             /*
-             * 如果 VPS 正在运行，
-             * 尝试获取 Linux uptime。
+             * VPS 正在运行：
+             * 获取 Linux uptime
              */
-            if (isRunning(live)) {
+
+            if (
+                isRunning(live)
+            ) {
 
                 getUptime(
                     service,
@@ -252,15 +307,9 @@ function getRawUsageStats(
 
 
 /*
- * ------------------------------------------------------------
- * 获取 VPS 开机时间
- *
- * 通过 Linux：
- *
- * /proc/uptime
- *
- * 计算 VPS 的启动时间。
- * ------------------------------------------------------------
+ * ============================================================
+ * 获取 Linux VPS uptime
+ * ============================================================
  */
 
 function getUptime(
@@ -272,61 +321,83 @@ function getUptime(
     const url =
         API_BASE +
         "basicShell/exec" +
-        "?veid=" + encodeURIComponent(VEID) +
-        "&api_key=" + encodeURIComponent(APIKEY) +
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
+        encodeURIComponent(APIKEY) +
         "&command=" +
         encodeURIComponent(
             "cat /proc/uptime"
         );
+
 
     $httpClient.get(
         {
             url: url,
             timeout: 15
         },
+
         function (
             error,
             response,
             body
         ) {
 
-            let uptimeSeconds = null;
+            let uptimeSeconds =
+                null;
 
-            if (!error && body) {
+
+            if (
+                !error &&
+                body
+            ) {
 
                 try {
 
                     const result =
                         JSON.parse(body);
 
+
                     const message =
                         result.message || "";
 
+
                     const match =
-                        String(message).match(
+                        String(
+                            message
+                        ).match(
                             /([0-9]+(?:\.[0-9]+)?)/
                         );
+
 
                     if (match) {
 
                         uptimeSeconds =
-                            Number(match[1]);
+                            Number(
+                                match[1]
+                            );
                     }
 
                 } catch (e) {
 
                     const match =
-                        String(body).match(
+                        String(
+                            body
+                        ).match(
                             /([0-9]+(?:\.[0-9]+)?)/
                         );
+
 
                     if (match) {
 
                         uptimeSeconds =
-                            Number(match[1]);
+                            Number(
+                                match[1]
+                            );
                     }
                 }
             }
+
 
             renderPanel(
                 service,
@@ -341,7 +412,7 @@ function getUptime(
 
 /*
  * ============================================================
- * 生成最终 Panel
+ * 生成最终面板
  * ============================================================
  */
 
@@ -359,9 +430,13 @@ function renderPanel(
      * --------------------------------------------------------
      */
 
-    let status = "未知";
+    let status =
+        "未知";
 
-    if (live.ve_status) {
+
+    if (
+        live.ve_status
+    ) {
 
         switch (
             String(
@@ -371,21 +446,27 @@ function renderPanel(
 
             case "running":
 
-                status = "运行中";
+                status =
+                    "运行中";
 
                 break;
+
 
             case "stopped":
 
-                status = "已停止";
+                status =
+                    "已停止";
 
                 break;
+
 
             case "starting":
 
-                status = "启动中";
+                status =
+                    "启动中";
 
                 break;
+
 
             default:
 
@@ -399,7 +480,7 @@ function renderPanel(
 
     /*
      * --------------------------------------------------------
-     * 流量
+     * 流量倍率
      * --------------------------------------------------------
      */
 
@@ -408,45 +489,75 @@ function renderPanel(
             service.monthly_data_multiplier || 1
         );
 
+
+    /*
+     * --------------------------------------------------------
+     * 总流量
+     * --------------------------------------------------------
+     */
+
     const totalBytes =
         Number(
             service.plan_monthly_data || 0
         );
 
+
+    /*
+     * --------------------------------------------------------
+     * 本月已用流量
+     * --------------------------------------------------------
+     */
+
     const usedBytes =
         Number(
             service.data_counter || 0
-        ) * multiplier;
+        ) *
+        multiplier;
 
+
+    /*
+     * --------------------------------------------------------
+     * 剩余流量
+     * --------------------------------------------------------
+     */
 
     let remainingBytes =
         totalBytes -
         usedBytes;
 
 
-    if (remainingBytes < 0) {
+    if (
+        remainingBytes < 0
+    ) {
 
-        remainingBytes = 0;
+        remainingBytes =
+            0;
     }
 
 
     /*
      * --------------------------------------------------------
-     * 流量使用百分比
+     * 流量百分比
      * --------------------------------------------------------
      */
 
-    let usedPercent = 0;
+    let usedPercent =
+        0;
 
-    let remainingPercent = 0;
+
+    let remainingPercent =
+        0;
 
 
-    if (totalBytes > 0) {
+    if (
+        totalBytes > 0
+    ) {
 
         usedPercent =
             usedBytes /
             totalBytes *
             100;
+
 
         remainingPercent =
             remainingBytes /
@@ -464,14 +575,17 @@ function renderPanel(
     const todayBytes =
         calculateTodayTraffic(
             stats
-        ) * multiplier;
+        ) *
+        multiplier;
 
 
     let todayText =
         "暂无数据";
 
 
-    if (todayBytes > 0) {
+    if (
+        todayBytes > 0
+    ) {
 
         todayText =
             formatBytes(
@@ -484,7 +598,8 @@ function renderPanel(
         stats.data.length > 0
     ) {
 
-        todayText = "0 B";
+        todayText =
+            "0 B";
     }
 
 
@@ -503,10 +618,12 @@ function renderPanel(
     const availableMemory =
         Number(
             live.mem_available_kb || 0
-        ) * 1024;
+        ) *
+        1024;
 
 
-    let usedMemory = 0;
+    let usedMemory =
+        0;
 
 
     if (
@@ -519,9 +636,12 @@ function renderPanel(
             availableMemory;
 
 
-        if (usedMemory < 0) {
+        if (
+            usedMemory < 0
+        ) {
 
-            usedMemory = 0;
+            usedMemory =
+                0;
         }
     }
 
@@ -530,7 +650,9 @@ function renderPanel(
         "未知";
 
 
-    if (totalMemory > 0) {
+    if (
+        totalMemory > 0
+    ) {
 
         const memoryPercent =
             usedMemory /
@@ -603,14 +725,17 @@ function renderPanel(
         "未知";
 
 
-    if (service.data_next_reset) {
+    if (
+        service.data_next_reset
+    ) {
 
         resetTime =
             formatDate(
                 new Date(
                     Number(
                         service.data_next_reset
-                    ) * 1000
+                    ) *
+                    1000
                 )
             );
     }
@@ -646,7 +771,8 @@ function renderPanel(
      * --------------------------------------------------------
      */
 
-    let ip = "未知";
+    let ip =
+        "未知";
 
 
     if (
@@ -661,15 +787,7 @@ function renderPanel(
 
     /*
      * --------------------------------------------------------
-     * 图标颜色
-     * --------------------------------------------------------
-     *
-     * 根据剩余流量：
-     *
-     * > 30% 绿色
-     * 10%~30% 橙色
-     * < 10% 红色
-     *
+     * Panel 图标颜色
      * --------------------------------------------------------
      */
 
@@ -697,16 +815,30 @@ function renderPanel(
      * ========================================================
      * 最终面板
      *
-     * 流量：
+     * 注意顺序：
      *
-     * 已用 / 总流量（已用百分比）
+     * 状态
+     * 今日流量
+     * 本月流量
+     * 内存
+     * 开机时间
+     * 运行时长
+     * 下次重置
+     * 服务器
+     * 机房
+     * IP
      *
      * ========================================================
      */
 
     const content =
+
         "状态       " +
         status +
+        "\n" +
+
+        "今日流量   " +
+        todayText +
         "\n" +
 
         "流量       " +
@@ -720,10 +852,6 @@ function renderPanel(
         " (" +
         usedPercent.toFixed(1) +
         "%)" +
-        "\n" +
-
-        "今日流量   " +
-        todayText +
         "\n" +
 
         "内存       " +
@@ -766,16 +894,6 @@ function renderPanel(
 /*
  * ============================================================
  * 计算今日流量
- * ============================================================
- *
- * getRawUsageStats 返回多个时间点：
- *
- * timestamp
- * network_in_bytes
- * network_out_bytes
- *
- * 这里取当天 00:00 到当前时间的数据。
- *
  * ============================================================
  */
 
@@ -820,7 +938,8 @@ function calculateTodayTraffic(
         1000;
 
 
-    let total = 0;
+    let total =
+        0;
 
 
     stats.data.forEach(
@@ -940,9 +1059,12 @@ function formatBytes(
         );
 
 
-    if (index < 0) {
+    if (
+        index < 0
+    ) {
 
-        index = 0;
+        index =
+            0;
     }
 
 
@@ -964,7 +1086,9 @@ function formatBytes(
         );
 
 
-    if (index === 0) {
+    if (
+        index === 0
+    ) {
 
         return (
             value.toFixed(0) +
@@ -1036,7 +1160,9 @@ function formatDuration(
         );
 
 
-    if (days > 0) {
+    if (
+        days > 0
+    ) {
 
         return (
             days +
@@ -1049,7 +1175,9 @@ function formatDuration(
     }
 
 
-    if (hours > 0) {
+    if (
+        hours > 0
+    ) {
 
         return (
             hours +
@@ -1148,7 +1276,9 @@ function parseArgs(
                     item.indexOf("=");
 
 
-                if (index === -1) {
+                if (
+                    index === -1
+                ) {
 
                     return;
                 }
@@ -1195,7 +1325,9 @@ function getErrorMessage(
     }
 
 
-    if (data.message) {
+    if (
+        data.message
+    ) {
 
         return String(
             data.message
@@ -1203,7 +1335,9 @@ function getErrorMessage(
     }
 
 
-    if (data.error) {
+    if (
+        data.error
+    ) {
 
         return (
             "Error " +
@@ -1231,11 +1365,14 @@ function panel(
 
     $done({
 
-        title: title,
+        title:
+            title,
 
-        content: content,
+        content:
+            content,
 
-        icon: icon,
+        icon:
+            icon,
 
         "icon-color":
             iconColor
