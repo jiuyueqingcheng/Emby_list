@@ -1,79 +1,74 @@
 /*
  * ============================================================
  * BandwagonHost / KiwiVM Surge Panel
- * Progress Bar Edition
  * ============================================================
  *
  * 显示：
  *
- * - VPS 状态
- * - 今日流量
- * - 本月流量进度条
- * - 内存进度条
- * - 开机时间
- * - 运行时长
- * - 下次流量重置
- * - 服务器
- * - 机房
- * - IP
+ *  - VPS 状态
+ *  - 今日流量
+ *  - 本月流量：已用 / 总流量（已用百分比 + 进度条）
+ *  - 内存：已用 / 总内存（使用百分比 + 进度条）
+ *  - 开机时间
+ *  - 运行时长
+ *  - 下次流量重置
+ *  - 服务器
+ *  - 机房
+ *  - IP
  *
- * 参数:
- * veid
- * apikey
- * title
+ * Surge Module 参数：
+ *
+ * VEID
+ * APIKEY
+ * TITLE
+ * INTERVAL
  *
  * ============================================================
  */
 
-
 const args = parseArgs($argument);
-
 
 const VEID =
     args.veid || "";
 
-
 const APIKEY =
     args.apikey || "";
 
-
 const TITLE =
-    args.title ||
-    "🇺🇸 BWH VPS";
-
+    args.title || "🇺🇸 BWH VPS";
 
 const API_BASE =
     "https://api.64clouds.com/v1/";
 
 
+/*
+ * ============================================================
+ * 参数检查
+ * ============================================================
+ */
 
 if (!VEID || !APIKEY) {
 
-
     panel(
         TITLE,
-        "❌ 请配置 VEID 和 APIKEY",
+        "❌ 请先配置 VEID 和 APIKEY",
         "exclamationmark.triangle.fill",
         "#FF9500"
     );
 
-
 } else {
 
-
     getServiceInfo();
-
 }
 
 
-
-
 /*
- * 获取 VPS 信息
+ * ============================================================
+ * 获取 VPS 基础信息
+ * ============================================================
  */
 
-function getServiceInfo(){
-
+function getServiceInfo() {
 
     const url =
         API_BASE +
@@ -84,200 +79,212 @@ function getServiceInfo(){
         encodeURIComponent(APIKEY);
 
 
-
     $httpClient.get(
         {
-            url:url,
-            timeout:15
+            url: url,
+            timeout: 15
         },
 
-
-        function(
+        function (
             error,
             response,
             body
-        ){
+        ) {
 
-
-            if(error){
+            if (error) {
 
                 panel(
                     TITLE,
-                    "❌ API 请求失败\n"+
+                    "❌ 获取 VPS 信息失败\n" +
                     error,
                     "wifi.exclamationmark",
                     "#FF3B30"
                 );
 
                 return;
-
             }
 
 
-
-            let service;
-
-
-            try{
-
-                service =
-                    JSON.parse(body);
-
-
-            }catch(e){
-
+            if (!body) {
 
                 panel(
                     TITLE,
-                    "❌ 数据解析失败",
+                    "❌ API 返回为空",
                     "exclamationmark.triangle.fill",
                     "#FF3B30"
                 );
 
                 return;
-
             }
 
+
+            let service;
+
+
+            try {
+
+                service =
+                    JSON.parse(body);
+
+            } catch (e) {
+
+                panel(
+                    TITLE,
+                    "❌ API 数据解析失败",
+                    "exclamationmark.triangle.fill",
+                    "#FF3B30"
+                );
+
+                return;
+            }
+
+
+            if (
+                Number(
+                    service.error || 0
+                ) !== 0
+            ) {
+
+                panel(
+                    TITLE,
+                    "❌ KiwiVM API 错误\n" +
+                    getErrorMessage(service),
+                    "exclamationmark.triangle.fill",
+                    "#FF3B30"
+                );
+
+                return;
+            }
 
 
             getLiveServiceInfo(
                 service
             );
-
-
         }
     );
-
 }
 
 
-
-
 /*
- * 实时信息
+ * ============================================================
+ * 获取实时 VPS 信息
+ * ============================================================
  */
 
 function getLiveServiceInfo(
     service
-){
-
+) {
 
     const url =
         API_BASE +
         "getLiveServiceInfo" +
-        "?veid="+
-        encodeURIComponent(VEID)+
-        "&api_key="+
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
         encodeURIComponent(APIKEY);
-
 
 
     $httpClient.get(
         {
-            url:url,
-            timeout:15
+            url: url,
+            timeout: 20
         },
 
-
-        function(
+        function (
             error,
             response,
             body
-        ){
+        ) {
+
+            let live = {};
 
 
-            let live={};
-
-
-
-            if(
+            if (
                 !error &&
                 body
-            ){
+            ) {
 
-                try{
+                try {
 
                     live =
                         JSON.parse(body);
 
+                } catch (e) {
 
-                }catch(e){}
-
+                    live = {};
+                }
             }
-
 
 
             getRawUsageStats(
                 service,
                 live
             );
-
         }
     );
-
 }
 
 
-
-
 /*
- * 流量统计
+ * ============================================================
+ * 获取流量统计
+ * ============================================================
  */
 
 function getRawUsageStats(
     service,
     live
-){
-
+) {
 
     const url =
-        API_BASE+
-        "getRawUsageStats"+
-        "?veid="+
-        encodeURIComponent(VEID)+
-        "&api_key="+
+        API_BASE +
+        "getRawUsageStats" +
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
         encodeURIComponent(APIKEY);
-
 
 
     $httpClient.get(
         {
-            url:url,
-            timeout:15
+            url: url,
+            timeout: 20
         },
 
-
-        function(
+        function (
             error,
             response,
             body
-        ){
+        ) {
+
+            let stats = {};
 
 
-            let stats={};
-
-
-            if(
+            if (
                 !error &&
                 body
-            ){
+            ) {
 
-                try{
+                try {
 
                     stats =
                         JSON.parse(body);
 
+                } catch (e) {
 
-                }catch(e){}
-
+                    stats = {};
+                }
             }
 
 
+            /*
+             * VPS 正在运行：
+             * 获取 Linux uptime
+             */
 
-            if(
+            if (
                 isRunning(live)
-            ){
-
+            ) {
 
                 getUptime(
                     service,
@@ -285,9 +292,7 @@ function getRawUsageStats(
                     stats
                 );
 
-
-            }else{
-
+            } else {
 
                 renderPanel(
                     service,
@@ -295,86 +300,103 @@ function getRawUsageStats(
                     stats,
                     null
                 );
-
-
             }
-
-
         }
     );
-
 }
 
 
-
-
 /*
- * uptime
+ * ============================================================
+ * 获取 Linux VPS uptime
+ * ============================================================
  */
 
 function getUptime(
     service,
     live,
     stats
-){
-
+) {
 
     const url =
-        API_BASE+
-        "basicShell/exec"+
-        "?veid="+
-        encodeURIComponent(VEID)+
-        "&api_key="+
-        encodeURIComponent(APIKEY)+
-        "&command="+
+        API_BASE +
+        "basicShell/exec" +
+        "?veid=" +
+        encodeURIComponent(VEID) +
+        "&api_key=" +
+        encodeURIComponent(APIKEY) +
+        "&command=" +
         encodeURIComponent(
             "cat /proc/uptime"
         );
 
 
-
     $httpClient.get(
         {
-            url:url,
-            timeout:15
+            url: url,
+            timeout: 15
         },
 
-
-        function(
+        function (
             error,
             response,
             body
-        ){
+        ) {
+
+            let uptimeSeconds =
+                null;
 
 
-            let uptimeSeconds=null;
-
-
-
-            if(
+            if (
                 !error &&
                 body
-            ){
+            ) {
+
+                try {
+
+                    const result =
+                        JSON.parse(body);
 
 
-                let match =
-                    String(body)
-                    .match(
-                        /([0-9]+(?:\.[0-9]+)?)/ 
-                    );
+                    const message =
+                        result.message || "";
 
 
-                if(match){
-
-                    uptimeSeconds =
-                        Number(
-                            match[1]
+                    const match =
+                        String(
+                            message
+                        ).match(
+                            /([0-9]+(?:\.[0-9]+)?)/
                         );
 
+
+                    if (match) {
+
+                        uptimeSeconds =
+                            Number(
+                                match[1]
+                            );
+                    }
+
+                } catch (e) {
+
+                    const match =
+                        String(
+                            body
+                        ).match(
+                            /([0-9]+(?:\.[0-9]+)?)/
+                        );
+
+
+                    if (match) {
+
+                        uptimeSeconds =
+                            Number(
+                                match[1]
+                            );
+                    }
                 }
-
             }
-
 
 
             renderPanel(
@@ -383,60 +405,96 @@ function getUptime(
                 stats,
                 uptimeSeconds
             );
-
         }
     );
-
 }
-// ============================================================
-// 生成面板
-// ============================================================
+
+
+/*
+ * ============================================================
+ * 生成最终面板
+ * ============================================================
+ */
 
 function renderPanel(
     service,
     live,
     stats,
     uptimeSeconds
-){
+) {
 
+
+    /*
+     * --------------------------------------------------------
+     * VPS 状态
+     * --------------------------------------------------------
+     */
 
     let status =
         "未知";
 
 
-    if(live.ve_status){
+    if (
+        live.ve_status
+    ) {
 
-        let s =
+        switch (
             String(
                 live.ve_status
-            ).toLowerCase();
+            ).toLowerCase()
+        ) {
+
+            case "running":
+
+                status =
+                    "运行中";
+
+                break;
 
 
-        if(s==="running"){
+            case "stopped":
 
-            status =
-                "🟢 运行中";
+                status =
+                    "已停止";
 
-        }else if(s==="stopped"){
+                break;
 
-            status =
-                "🔴 已停止";
 
-        }else{
+            case "starting":
 
-            status =
-                live.ve_status;
+                status =
+                    "启动中";
 
+                break;
+
+
+            default:
+
+                status =
+                    String(
+                        live.ve_status
+                    );
         }
-
     }
 
 
+    /*
+     * --------------------------------------------------------
+     * 流量倍率
+     * --------------------------------------------------------
+     */
 
-    // =========================
-    // 流量
-    // =========================
+    const multiplier =
+        Number(
+            service.monthly_data_multiplier || 1
+        );
 
+
+    /*
+     * --------------------------------------------------------
+     * 总流量
+     * --------------------------------------------------------
+     */
 
     const totalBytes =
         Number(
@@ -444,73 +502,126 @@ function renderPanel(
         );
 
 
+    /*
+     * --------------------------------------------------------
+     * 本月已用流量
+     * --------------------------------------------------------
+     */
+
     const usedBytes =
         Number(
             service.data_counter || 0
         ) *
-        Number(
-            service.monthly_data_multiplier || 1
-        );
+        multiplier;
 
 
+    /*
+     * --------------------------------------------------------
+     * 剩余流量
+     * --------------------------------------------------------
+     */
 
-    let usedPercent = 0;
+    let remainingBytes =
+        totalBytes -
+        usedBytes;
 
 
-    if(totalBytes>0){
+    if (
+        remainingBytes < 0
+    ) {
+
+        remainingBytes =
+            0;
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * 流量百分比及进度条
+     * --------------------------------------------------------
+     */
+
+    let usedPercent =
+        0;
+
+
+    let remainingPercent =
+        0;
+
+
+    if (
+        totalBytes > 0
+    ) {
 
         usedPercent =
             usedBytes /
             totalBytes *
             100;
 
+
+        remainingPercent =
+            remainingBytes /
+            totalBytes *
+            100;
     }
 
 
-
-    // =========================
-    // 今日流量
-    // =========================
+    const trafficProgressBar =
+        makeProgressBar(usedPercent);
 
 
-    let todayBytes =
+    const trafficText =
+        formatBytes(usedBytes) +
+        " / " +
+        formatBytes(totalBytes) +
+        " (" +
+        usedPercent.toFixed(1) +
+        "%) " +
+        trafficProgressBar;
+
+
+    /*
+     * --------------------------------------------------------
+     * 今日流量
+     * --------------------------------------------------------
+     */
+
+    const todayBytes =
         calculateTodayTraffic(
             stats
-        );
-
-
-    todayBytes *=
-        Number(
-            service.monthly_data_multiplier || 1
-        );
-
+        ) *
+        multiplier;
 
 
     let todayText =
         "暂无数据";
 
 
-    if(todayBytes>0){
+    if (
+        todayBytes > 0
+    ) {
 
         todayText =
             formatBytes(
                 todayBytes
             );
 
-    }else{
+    } else if (
+        stats &&
+        stats.data &&
+        stats.data.length > 0
+    ) {
 
         todayText =
             "0 B";
-
     }
 
 
-
-
-    // =========================
-    // 内存
-    // =========================
-
+    /*
+     * --------------------------------------------------------
+     * 内存及进度条
+     * --------------------------------------------------------
+     */
 
     const totalMemory =
         Number(
@@ -518,76 +629,75 @@ function renderPanel(
         );
 
 
+    const availableMemory =
+        Number(
+            live.mem_available_kb || 0
+        ) *
+        1024;
 
-    /*
-     * KiwiVM API没有真实内存
-     * 保留兼容
-     */
 
     let usedMemory =
-        Number(
-            live.mem_used || 0
-        );
-
-
-
-    let memoryPercent =
         0;
 
 
+    if (
+        totalMemory > 0 &&
+        availableMemory >= 0
+    ) {
 
-    if(
-        totalMemory>0 &&
-        usedMemory>0
-    ){
+        usedMemory =
+            totalMemory -
+            availableMemory;
 
-        memoryPercent =
-            usedMemory /
-            totalMemory *
-            100;
 
+        if (
+            usedMemory < 0
+        ) {
+
+            usedMemory =
+                0;
+        }
     }
-
 
 
     let memoryText =
         "未知";
 
 
+    if (
+        totalMemory > 0
+    ) {
 
-    if(totalMemory>0){
+        const memoryPercent =
+            usedMemory /
+            totalMemory *
+            100;
+
+
+        const memoryProgressBar =
+            makeProgressBar(memoryPercent);
 
 
         memoryText =
-            progressBar(
-                memoryPercent
-            )
-            +
-            " "
-            +
-            memoryPercent
-            .toFixed(1)
-            +
-            "%\n           "
-            +
             formatBytes(
                 usedMemory
-            )
-            +
-            " / "
-            +
+            ) +
+            " / " +
             formatBytes(
                 totalMemory
-            );
-
+            ) +
+            " (" +
+            memoryPercent.toFixed(1) +
+            "%) " +
+            memoryProgressBar;
     }
 
 
-
-    // =========================
-    // uptime
-    // =========================
-
+    /*
+     * --------------------------------------------------------
+     * 开机时间
+     * --------------------------------------------------------
+     */
 
     let bootTime =
         "未知";
@@ -597,513 +707,692 @@ function renderPanel(
         "未知";
 
 
+    if (
+        uptimeSeconds !== null &&
+        isFinite(uptimeSeconds) &&
+        uptimeSeconds > 0
+    ) {
 
-    if(
-        uptimeSeconds &&
-        uptimeSeconds>0
-    ){
-
-        let boot =
-            Date.now()
-            -
-            uptimeSeconds*1000;
-
+        const bootTimestamp =
+            Date.now() -
+            uptimeSeconds *
+            1000;
 
 
         bootTime =
             formatDate(
                 new Date(
-                    boot
+                    bootTimestamp
                 )
             );
-
 
 
         uptimeText =
             formatDuration(
                 uptimeSeconds
             );
-
     }
 
 
+    /*
+     * --------------------------------------------------------
+     * 下次流量重置
+     * --------------------------------------------------------
+     */
 
-    // =========================
-    // 重置时间
-    // =========================
-
-
-    let reset =
+    let resetTime =
         "未知";
 
 
-    if(
+    if (
         service.data_next_reset
-    ){
+    ) {
 
-        reset =
+        resetTime =
             formatDate(
                 new Date(
-                    service.data_next_reset*1000
+                    Number(
+                        service.data_next_reset
+                    ) *
+                    1000
                 )
             );
-
     }
 
 
+    /*
+     * --------------------------------------------------------
+     * 服务器名称
+     * --------------------------------------------------------
+     */
 
-    // =========================
-    // IP
-    // =========================
+    const hostname =
+        service.hostname ||
+        live.live_hostname ||
+        "VPS";
 
+
+    /*
+     * --------------------------------------------------------
+     * 机房
+     * --------------------------------------------------------
+     */
+
+    const location =
+        service.node_datacenter ||
+        service.node_location ||
+        "未知";
+
+
+    /*
+     * --------------------------------------------------------
+     * IP
+     * --------------------------------------------------------
+     */
 
     let ip =
         "未知";
 
 
-    if(
+    if (
         service.ip_addresses &&
-        service.ip_addresses.length
-    ){
+        service.ip_addresses.length > 0
+    ) {
 
         ip =
             service.ip_addresses[0];
-
     }
 
 
+    /*
+     * --------------------------------------------------------
+     * Panel 图标颜色
+     * --------------------------------------------------------
+     */
 
-    const hostname =
-        service.hostname ||
-        "BWH VPS";
-
-
-    const location =
-        service.node_datacenter ||
-        "未知";
-
-
-
-
-
-    let color =
+    let iconColor =
         "#34C759";
 
 
-    if(
-        100-usedPercent < 20
-    ){
+    if (
+        remainingPercent <= 10
+    ) {
 
-        color =
+        iconColor =
             "#FF3B30";
 
+    } else if (
+        remainingPercent <= 30
+    ) {
 
-    }else if(
-        100-usedPercent < 50
-    ){
-
-        color =
+        iconColor =
             "#FF9500";
-
     }
 
 
+    /*
+     * ========================================================
+     * 最终面板
+     * ========================================================
+     */
 
     const content =
 
+        "状态       " +
+        status +
+        "\n" +
 
-        "状态       "+
-        status+
-        "\n\n"+
+        "今日流量   " +
+        todayText +
+        "\n" +
 
+        "流量       " +
+        trafficText +
+        "\n" +
 
-        "今日流量   "+
-        todayText+
-        "\n\n"+
+        "内存       " +
+        memoryText +
+        "\n" +
 
+        "开机时间   " +
+        bootTime +
+        "\n" +
 
-        "流量       "+
-        progressBar(
-            usedPercent
-        )
-        +
-        " "
-        +
-        usedPercent
-        .toFixed(1)
-        +
-        "%\n"+
-        "           "+
-        formatBytes(
-            usedBytes
-        )
-        +
-        " / "
-        +
-        formatBytes(
-            totalBytes
-        )
-        +
-        "\n\n"+
+        "运行时长   " +
+        uptimeText +
+        "\n" +
 
+        "下次重置   " +
+        resetTime +
+        "\n" +
 
+        "服务器     " +
+        hostname +
+        "\n" +
 
-        "内存       "+
-        memoryText+
-        "\n\n"+
+        "机房       " +
+        location +
+        "\n" +
 
-
-
-        "开机时间   "+
-        bootTime+
-        "\n"+
-
-
-        "运行时长   "+
-        uptimeText+
-        "\n\n"+
-
-
-
-        "下次重置   "+
-        reset+
-        "\n\n"+
-
-
-
-        "服务器     "+
-        hostname+
-        "\n"+
-
-
-        "机房       "+
-        location+
-        "\n"+
-
-
-        "IP         "+
+        "IP         " +
         ip;
-
-
 
 
     panel(
         TITLE,
         content,
         "server.rack",
-        color
+        iconColor
     );
-
 }
 
 
+/*
+ * ============================================================
+ * 生成文本进度条
+ * ============================================================
+ */
 
-// ============================================================
-// 进度条
-// ============================================================
+function makeProgressBar(percent, length) {
 
-function progressBar(
-    percent
-){
+    percent = Math.max(0, Math.min(100, Number(percent) || 0));
 
-    const size =
-        10;
-
-
-    let count =
-        Math.round(
-            percent/100*size
-        );
+    length = length || 10;
 
 
-    if(count<0)
-        count=0;
+    const filledLength = Math.round((percent / 100) * length);
+
+    const emptyLength = length - filledLength;
 
 
-    if(count>size)
-        count=size;
-
-
-
-    return (
-        "█".repeat(count)
-        +
-        "░".repeat(size-count)
-    );
-
+    return "■".repeat(filledLength) + "□".repeat(emptyLength);
 }
 
 
-
-// ============================================================
-// 今日流量计算
-// ============================================================
+/*
+ * ============================================================
+ * 计算今日流量
+ * ============================================================
+ */
 
 function calculateTodayTraffic(
     stats
-){
+) {
 
-    if(
+    if (
         !stats ||
-        !stats.data
-    ){
+        !stats.data ||
+        !Array.isArray(
+            stats.data
+        )
+    ) {
 
         return 0;
-
     }
 
 
-
-    let start =
+    const now =
         new Date();
 
 
-    start.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+    /*
+     * 今天 00:00:00
+     */
+
+    const startOfDay =
+        new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            0,
+            0,
+            0,
+            0
+        );
 
 
+    const startTimestamp =
+        startOfDay.getTime() /
+        1000;
 
-    let total=0;
 
+    let total =
+        0;
 
 
     stats.data.forEach(
-        item=>{
+        function (item) {
+
+            if (!item) {
+
+                return;
+            }
 
 
-            let time =
+            const timestamp =
                 Number(
                     item.timestamp || 0
                 );
 
 
+            if (
+                timestamp >=
+                    startTimestamp &&
+                timestamp <=
+                    Date.now() / 1000
+            ) {
 
-            if(
-                time >=
-                start.getTime()/1000
-            ){
+                const networkIn =
+                    Number(
+                        item.network_in_bytes ||
+                        0
+                    );
+
+
+                const networkOut =
+                    Number(
+                        item.network_out_bytes ||
+                        0
+                    );
 
 
                 total +=
-                    Number(
-                        item.network_in_bytes || 0
-                    )
-                    +
-                    Number(
-                        item.network_out_bytes || 0
-                    );
-
+                    networkIn +
+                    networkOut;
             }
-
-
         }
     );
 
 
     return total;
-
 }
 
 
+/*
+ * ============================================================
+ * 判断 VPS 是否运行
+ * ============================================================
+ */
 
-// ============================================================
-// 工具
-// ============================================================
+function isRunning(
+    live
+) {
 
+    if (!live) {
+
+        return false;
+    }
+
+
+    const status =
+        String(
+            live.ve_status || ""
+        ).toLowerCase();
+
+
+    return (
+        status === "running" ||
+        status === "started"
+    );
+}
+
+
+/*
+ * ============================================================
+ * 字节格式化
+ * ============================================================
+ */
 
 function formatBytes(
     bytes
-){
+) {
 
-    if(!bytes)
+    bytes =
+        Number(bytes);
+
+
+    if (
+        !isFinite(bytes) ||
+        bytes <= 0
+    ) {
+
         return "0 B";
+    }
 
 
-    const units=[
+    const units = [
         "B",
         "KB",
         "MB",
         "GB",
-        "TB"
+        "TB",
+        "PB"
     ];
 
 
-
-    let i =
+    let index =
         Math.floor(
-            Math.log(bytes)
-            /
+            Math.log(bytes) /
             Math.log(1024)
         );
 
 
+    if (
+        index < 0
+    ) {
+
+        index =
+            0;
+    }
+
+
+    if (
+        index >=
+        units.length
+    ) {
+
+        index =
+            units.length - 1;
+    }
+
+
+    const value =
+        bytes /
+        Math.pow(
+            1024,
+            index
+        );
+
+
+    if (
+        index === 0
+    ) {
+
+        return (
+            value.toFixed(0) +
+            " " +
+            units[index]
+        );
+    }
+
 
     return (
-        (
-        bytes/
-        Math.pow(1024,i)
-        )
-        .toFixed(2)
-        +
-        " "
-        +
-        units[i]
+        value.toFixed(2) +
+        " " +
+        units[index]
     );
-
 }
 
 
-
+/*
+ * ============================================================
+ * 运行时间格式化
+ * ============================================================
+ */
 
 function formatDuration(
-    sec
-){
+    seconds
+) {
 
-    sec =
-        Math.floor(sec);
-
-
-    let d =
+    seconds =
         Math.floor(
-            sec/86400
+            Number(seconds)
         );
 
 
-    let h =
+    if (
+        !isFinite(seconds) ||
+        seconds < 0
+    ) {
+
+        return "未知";
+    }
+
+
+    const days =
         Math.floor(
-            sec%86400/3600
+            seconds /
+            86400
         );
 
 
-    let m =
+    seconds %=
+        86400;
+
+
+    const hours =
         Math.floor(
-            sec%3600/60
+            seconds /
+            3600
         );
+
+
+    seconds %=
+        3600;
+
+
+    const minutes =
+        Math.floor(
+            seconds /
+            60
+        );
+
+
+    if (
+        days > 0
+    ) {
+
+        return (
+            days +
+            "天 " +
+            hours +
+            "小时 " +
+            minutes +
+            "分钟"
+        );
+    }
+
+
+    if (
+        hours > 0
+    ) {
+
+        return (
+            hours +
+            "小时 " +
+            minutes +
+            "分钟"
+        );
+    }
 
 
     return (
-        d+
-        "天 "+
-        h+
-        "小时 "+
-        m+
+        minutes +
         "分钟"
     );
-
 }
 
 
-
+/*
+ * ============================================================
+ * 日期格式化
+ * ============================================================
+ */
 
 function formatDate(
     date
-){
+) {
+
+    if (
+        !date ||
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "未知";
+    }
+
+
+    function pad(
+        number
+    ) {
+
+        return number < 10
+            ? "0" + number
+            : String(number);
+    }
+
 
     return (
-        date.getFullYear()
-        +
-        "-"
-        +
-        (date.getMonth()+1)
-        +
-        "-"
-        +
-        date.getDate()
-        +
-        " "
-        +
-        date.getHours()
-        +
-        ":"
-        +
-        String(
+        date.getFullYear() +
+        "-" +
+        pad(
+            date.getMonth() + 1
+        ) +
+        "-" +
+        pad(
+            date.getDate()
+        ) +
+        " " +
+        pad(
+            date.getHours()
+        ) +
+        ":" +
+        pad(
             date.getMinutes()
         )
-        .padStart(2,"0")
     );
-
 }
 
 
-
-
-
-function isRunning(
-    live
-){
-
-    return (
-        live &&
-        String(
-            live.ve_status
-        )
-        .toLowerCase()
-        ===
-        "running"
-    );
-
-}
-
-
-
+/*
+ * ============================================================
+ * Surge 参数解析
+ * ============================================================
+ */
 
 function parseArgs(
-    str
-){
+    argument
+) {
 
-    let obj={};
-
-
-    if(!str)
-        return obj;
+    const result = {};
 
 
-    str.split("&")
-    .forEach(
-        item=>{
+    if (!argument) {
+
+        return result;
+    }
 
 
-            let p =
-                item.split("=");
+    argument
+        .split("&")
+        .forEach(
+            function (item) {
+
+                const index =
+                    item.indexOf("=");
 
 
-            obj[p[0]] =
-                decodeURIComponent(
-                    p[1] || ""
-                );
+                if (
+                    index === -1
+                ) {
 
-        }
-    );
+                    return;
+                }
 
 
-    return obj;
+                const key =
+                    item.substring(
+                        0,
+                        index
+                    );
 
+
+                const value =
+                    item.substring(
+                        index + 1
+                    );
+
+
+                result[key] =
+                    decodeURIComponent(
+                        value
+                    );
+            }
+        );
+
+
+    return result;
 }
 
 
+/*
+ * ============================================================
+ * API 错误信息
+ * ============================================================
+ */
 
+function getErrorMessage(
+    data
+) {
+
+    if (!data) {
+
+        return "未知错误";
+    }
+
+
+    if (
+        data.message
+    ) {
+
+        return String(
+            data.message
+        );
+    }
+
+
+    if (
+        data.error
+    ) {
+
+        return (
+            "Error " +
+            data.error
+        );
+    }
+
+
+    return "未知错误";
+}
+
+
+/*
+ * ============================================================
+ * Surge Panel 输出
+ * ============================================================
+ */
 
 function panel(
     title,
     content,
     icon,
-    color
-){
+    iconColor
+) {
 
     $done({
 
-        title:title,
+        title:
+            title,
 
-        content:content,
+        content:
+            content,
 
-        icon:icon,
+        icon:
+            icon,
 
-        "icon-color":color
-
+        "icon-color":
+            iconColor
     });
-
 }
