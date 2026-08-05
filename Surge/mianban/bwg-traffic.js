@@ -1,19 +1,28 @@
 /*
- * =====================================================
+ * ==========================================================
  * BandwagonHost VPS Dashboard for Surge
- * =====================================================
  *
- * 参数:
+ * Version: 2.0
  *
- * veid=你的VEID
- * apikey=你的APIKEY
- * title=显示名称
+ * Features:
  *
- * =====================================================
+ *  - VPS Status
+ *  - CPU Usage
+ *  - Memory Usage
+ *  - Today Traffic
+ *  - Monthly Traffic
+ *  - Traffic Progress Bar
+ *  - Uptime
+ *  - Reset Time
+ *  - IP
+ *  - Datacenter
+ *
+ * ==========================================================
  */
 
 
-const args = parseArgs($argument);
+const args =
+    parseArgs($argument);
 
 
 const VEID =
@@ -23,35 +32,43 @@ const APIKEY =
     args.apikey || "";
 
 const TITLE =
-    args.title || "🇺🇸 BWH VPS";
+    args.title ||
+    "🇺🇸 BWH VPS";
+
+
+const AGENT =
+    args.agent || "";
 
 
 const API =
     "https://api.64clouds.com/v1/";
 
 
-if (!VEID || !APIKEY) {
 
-    $done({
-        title: TITLE,
-        content: "❌ 请配置 VEID 和 APIKEY",
-        icon: "exclamationmark.triangle",
-        "icon-color": "#FF9500"
-    });
+if(
+    !VEID ||
+    !APIKEY
+){
 
-} else {
+    panel(
+        "❌ 未配置 VEID/APIKEY",
+        "#FF3B30"
+    );
 
-    getInfo();
+}else{
+
+    getServiceInfo();
 
 }
 
 
 
+
 /*
- * 获取 VPS 信息
+ * 获取 KiwiVM 信息
  */
 
-function getInfo(){
+function getServiceInfo(){
 
 
     const url =
@@ -63,47 +80,56 @@ function getInfo(){
         APIKEY;
 
 
+
     $httpClient.get(
         url,
         function(
-            error,
-            response,
+            err,
+            resp,
             body
         ){
 
-            if(error){
 
-                doneError(error);
-                return;
-            }
+            if(err){
 
-
-            let data;
-
-
-            try{
-
-                data =
-                    JSON.parse(body);
-
-            }catch(e){
-
-                doneError(
-                    "解析失败"
+                panel(
+                    "API 错误\n"+err,
+                    "#FF3B30"
                 );
 
                 return;
             }
 
 
+            let service;
+
+
+            try{
+
+                service =
+                    JSON.parse(body);
+
+            }catch(e){
+
+                panel(
+                    "数据解析失败",
+                    "#FF3B30"
+                );
+
+                return;
+
+            }
+
+
             getLive(
-                data
+                service
             );
 
         }
     );
 
 }
+
 
 
 
@@ -117,9 +143,9 @@ function getLive(service){
     const url =
         API +
         "getLiveServiceInfo" +
-        "?veid=" +
-        VEID +
-        "&api_key=" +
+        "?veid="+
+        VEID+
+        "&api_key="+
         APIKEY;
 
 
@@ -127,15 +153,19 @@ function getLive(service){
     $httpClient.get(
         url,
         function(
-            error,
-            response,
+            err,
+            resp,
             body
         ){
+
 
             let live={};
 
 
-            if(!error && body){
+            if(
+                !err &&
+                body
+            ){
 
                 try{
 
@@ -147,7 +177,8 @@ function getLive(service){
             }
 
 
-            render(
+
+            getAgent(
                 service,
                 live
             );
@@ -161,28 +192,115 @@ function getLive(service){
 
 
 /*
- * 面板
+ * VPS Agent
  */
 
-function render(
+function getAgent(
     service,
     live
 ){
 
 
+    if(!AGENT){
+
+        render(
+            service,
+            live,
+            {}
+        );
+
+        return;
+    }
+
+
+
+    $httpClient.get(
+        AGENT,
+        function(
+            err,
+            resp,
+            body
+        ){
+
+
+            let agent={};
+
+
+
+            if(
+                !err &&
+                body
+            ){
+
+                try{
+
+                    agent =
+                        JSON.parse(body);
+
+                }catch(e){}
+
+            }
+
+
+
+            render(
+                service,
+                live,
+                agent
+            );
+
+        }
+    );
+
+}
+
+
+
+
+
+/*
+ * 渲染面板
+ */
+
+function render(
+    service,
+    live,
+    agent
+){
+
+
+
+    /*
+     * 状态
+     */
+
+
     let status =
-        "未知";
+        "⚪ 未知";
 
 
-    if(live.ve_status){
+    if(
+        live.ve_status
+    ){
 
-        status =
-            live.ve_status
-            .toLowerCase()=="running"
-            ?
-            "🟢 运行中"
-            :
-            "🔴 已停止";
+        if(
+            String(
+                live.ve_status
+            )
+            .toLowerCase()
+            ==
+            "running"
+        ){
+
+            status =
+                "🟢 运行中";
+
+        }else{
+
+            status =
+                "🔴 已停止";
+
+        }
 
     }
 
@@ -192,49 +310,50 @@ function render(
      * 流量
      */
 
-    const total =
+
+    const totalTraffic =
         Number(
             service.plan_monthly_data || 0
         );
 
 
-    const used =
+    const usedTraffic =
         Number(
             service.data_counter || 0
         );
 
 
-    let percent =
+
+    let trafficPercent =
         0;
 
 
-    if(total>0){
+    if(totalTraffic){
 
-        percent =
-            used /
-            total *
+        trafficPercent =
+            usedTraffic /
+            totalTraffic *
             100;
 
     }
 
 
 
+
     /*
-     * 今日流量
+     * CPU
      */
 
-    let today =
-        "暂无数据";
+
+    const cpu =
+        Number(
+            agent.cpu || 0
+        );
 
 
-    if(service.data_counter){
-
-        today =
-            formatBytes(
-                used
-            );
-
-    }
+    const core =
+        agent.core ||
+        "--";
 
 
 
@@ -242,18 +361,92 @@ function render(
      * 内存
      */
 
-    let memory =
-        "未知";
+
+    const memTotal =
+        Number(
+            agent.mem_total || 0
+        );
 
 
-    if(service.plan_ram){
+    const memUsed =
+        Number(
+            agent.mem_used || 0
+        );
 
-        memory =
-            formatBytes(
-                service.plan_ram
+
+    let memPercent =
+        0;
+
+
+    if(memTotal){
+
+        memPercent =
+            memUsed /
+            memTotal *
+            100;
+
+    }
+
+
+
+    /*
+     * uptime
+     */
+
+
+    let uptime =
+        "--";
+
+
+    let boot =
+        "--";
+
+
+    if(agent.uptime){
+
+
+        uptime =
+            formatDuration(
+                agent.uptime
+            );
+
+
+        boot =
+            formatDate(
+                Date.now()
+                -
+                agent.uptime*1000
             );
 
     }
+
+
+
+
+
+    /*
+     * 今日流量
+     *
+     * KiwiVM 不提供直接今日值
+     * 使用当天累计接口
+     */
+
+
+    let today =
+        "--";
+
+
+
+    if(service.data_counter){
+
+        today =
+            formatBytes(
+                service.data_counter
+            );
+
+    }
+
+
 
 
 
@@ -261,8 +454,9 @@ function render(
      * IP
      */
 
+
     let ip =
-        "未知";
+        "--";
 
 
     if(
@@ -277,27 +471,40 @@ function render(
 
 
 
+
     /*
-     * 颜色
+     * 机房
      */
 
-    let color =
-        "#34C759";
+
+    const location =
+        service.node_datacenter ||
+        "--";
 
 
-    let remain =
-        100-percent;
 
 
-    if(remain<20){
+    /*
+     * 重置
+     */
 
-        color="#FF3B30";
 
-    }else if(remain<50){
+    let reset =
+        "--";
 
-        color="#FF9500";
+
+    if(
+        service.data_next_reset
+    ){
+
+        reset =
+            formatDate(
+                service.data_next_reset*1000
+            );
 
     }
+
+
 
 
 
@@ -308,31 +515,63 @@ function render(
         "\n\n"+
 
 
+        "CPU        "+
+        bar(cpu)+
+        " "+
+        cpu+
+        "%\n"+
+        "           "+
+        core+
+        " Core\n\n"+
+
+
+
+        "内存       "+
+        bar(memPercent)+
+        " "+
+        memPercent.toFixed(1)+
+        "%\n"+
+        "           "+
+        formatBytes(memUsed*1024*1024)+
+        " / "+
+        formatBytes(memTotal*1024*1024)
+        +
+        "\n\n"+
+
+
+
         "今日流量   "+
         today+
         "\n\n"+
 
 
+
         "流量       "+
-        bar(percent)+
+        bar(trafficPercent)+
         " "+
-        percent.toFixed(1)+
-        "%"+
-        "\n"+
+        trafficPercent.toFixed(1)+
+        "%\n"+
         "           "+
-        formatBytes(used)+
+        formatBytes(usedTraffic)+
         " / "+
-        formatBytes(total)+
+        formatBytes(totalTraffic)
+        +
         "\n\n"+
 
 
-        "内存       "+
-        memory+
+
+        "开机时间   "+
+        boot+
+        "\n"+
+
+
+        "运行时长   "+
+        uptime+
         "\n\n"+
 
 
-        "重置时间   "+
-        resetTime(service)+
+        "下次重置   "+
+        reset+
         "\n\n"+
 
 
@@ -340,15 +579,13 @@ function render(
         (
             service.hostname ||
             "BWH VPS"
-        )+
+        )
+        +
         "\n"+
 
 
         "机房       "+
-        (
-            service.node_datacenter ||
-            "未知"
-        )+
+        location+
         "\n"+
 
 
@@ -357,24 +594,16 @@ function render(
 
 
 
-    $done({
-
-        title:
-            TITLE,
-
-        content:
-            content,
-
-        icon:
-            "server.rack",
-
-        "icon-color":
-            color
-
-    });
+    panel(
+        content,
+        color(
+            100-trafficPercent
+        )
+    );
 
 
 }
+
 
 
 
@@ -382,52 +611,73 @@ function render(
  * 进度条
  */
 
-function bar(percent){
+function bar(
+    percent
+){
 
-
-    const length =
+    const size =
         10;
 
 
     let n =
         Math.round(
-            percent/100*length
+            percent/100*size
         );
 
 
-    if(n>length)
-        n=length;
+    if(n<0)n=0;
 
+    if(n>size)n=size;
 
-    if(n<0)
-        n=0;
 
 
     return (
-        "█".repeat(n)+
-        "░".repeat(length-n)
+        "█".repeat(n)
+        +
+        "░".repeat(size-n)
     );
 
 }
 
 
 
+
 /*
- * 字节转换
+ * 颜色
  */
 
-function formatBytes(bytes){
+function color(
+    remain
+){
+
+    if(remain<20)
+        return "#FF3B30";
 
 
-    bytes =
-        Number(bytes);
+    if(remain<50)
+        return "#FF9500";
 
 
-    if(!bytes)
+    return "#34C759";
+
+}
+
+
+
+
+/*
+ * 字节
+ */
+
+function formatBytes(
+    b
+){
+
+    if(!b)
         return "0 B";
 
 
-    const units=[
+    const u=[
         "B",
         "KB",
         "MB",
@@ -438,66 +688,121 @@ function formatBytes(bytes){
 
     let i =
         Math.floor(
-            Math.log(bytes)/
+            Math.log(b)
+            /
             Math.log(1024)
         );
 
 
     return (
-        (bytes/
+        (b/
         Math.pow(1024,i))
         .toFixed(2)
         +" "+
-        units[i]
+        u[i]
     );
 
 }
 
 
 
-/*
- * 重置时间
- */
-
-function resetTime(data){
 
 
-    if(
-        !data.data_next_reset
-    )
-        return "未知";
+function formatDuration(
+    s
+){
+
+    s =
+        Math.floor(s);
 
 
-    return new Date(
-        data.data_next_reset*1000
-    )
-    .toLocaleString();
+    let d =
+        Math.floor(
+            s/86400
+        );
+
+
+    let h =
+        Math.floor(
+            s%86400/3600
+        );
+
+
+    let m =
+        Math.floor(
+            s%3600/60
+        );
+
+
+    return (
+        d+
+        "天 "+
+        h+
+        "小时 "+
+        m+
+        "分钟"
+    );
 
 }
 
 
 
-/*
- * 参数解析
- */
 
-function parseArgs(str){
 
-    let obj={};
+function formatDate(
+    t
+){
+
+    let d =
+        new Date(t);
+
+
+    return (
+        d.getFullYear()
+        +
+        "-"
+        +
+        (d.getMonth()+1)
+        +
+        "-"
+        +
+        d.getDate()
+        +
+        " "
+        +
+        d.getHours()
+        +
+        ":"
+        +
+        d.getMinutes()
+    );
+
+}
+
+
+
+
+
+function parseArgs(
+    str
+){
+
+    let o={};
 
 
     if(!str)
-        return obj;
+        return o;
 
 
     str.split("&")
     .forEach(
-        item=>{
+        x=>{
 
-            let p =
-                item.split("=");
+            let p=
+                x.split("=");
 
-            obj[p[0]] =
+
+            o[p[0]]=
                 decodeURIComponent(
                     p[1]||""
                 );
@@ -506,17 +811,18 @@ function parseArgs(str){
     );
 
 
-    return obj;
+    return o;
 
 }
 
 
 
-/*
- * 错误
- */
 
-function doneError(msg){
+
+function panel(
+    text,
+    color
+){
 
     $done({
 
@@ -524,14 +830,13 @@ function doneError(msg){
             TITLE,
 
         content:
-            "❌ "+
-            msg,
+            text,
 
         icon:
-            "xmark.circle",
+            "server.rack",
 
         "icon-color":
-            "#FF3B30"
+            color
 
     });
 
