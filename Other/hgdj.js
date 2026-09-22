@@ -1,5 +1,5 @@
 // 部署黄果封面解密 Worker 后填入，例如 https://your-worker.workers.dev/
-const HUANGGUO_COVER_WORKER_URL = "https://hg.168434.xyz/";
+const HUANGGUO_COVER_WORKER_URL = "https://misty-water-c92f.suzhou-999.workers.dev/";
 const HUANGGUO_SITE = "https://huangguoai.com";
 const HUANGGUO_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36";
 const HUANGGUO_FALLBACK_COVER = HUANGGUO_SITE + "/favicon.ico";
