@@ -316,7 +316,7 @@ function parseCards(html, pageUrl, channel) {
     const tags = [];
     const tagRe = /<a\b[^>]*class=["'][^"']*hg-tag[^"']*["'][^>]*>([\s\S]*?)<\/a>/gi;
     let tagMatch;
-    while ((tagMatch = tagRe.exec(block))) tags.push(stripBasicTags(tagMatch[1]));
+    while ((tagMatch = tagRe.exec(block))) tags.push(stripTagLabel(tagMatch[1]));
     const posterPath = image(block);
     const markedHref = addCoverMarker(href, posterPath);
     seen[href] = true;
@@ -399,6 +399,10 @@ function extractVisibleCardRegion(html, channel) {
 
 function stripBasicTags(value) {
   return decodeBasicEntities(String(value || "").replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+}
+
+function stripTagLabel(value) {
+  return stripBasicTags(String(value || "").replace(/<span\b[^>]*class=["'][^"']*\bsr-only\b[^"']*["'][^>]*>[\s\S]*?<\/span>/gi, " "));
 }
 
 function decodeBasicEntities(value) {
@@ -533,7 +537,7 @@ function rankTags(block) {
   const tagRe = /<a\b[^>]*href=["'][^"']*\/tag\/[^"']*["'][^>]*>([\s\S]*?)<\/a>/gi;
   let match;
   while ((match = tagRe.exec(String(block || "")))) {
-    const tag = stripBasicTags(match[1]);
+    const tag = stripTagLabel(match[1]);
     if (tag && tags.indexOf(tag) < 0) tags.push(tag);
   }
   return tags;
@@ -745,7 +749,7 @@ function recommendationTags(block) {
   const tagRe = /<a\b[^>]*class=["'][^"']*\bhg-tag\b[^"']*["'][^>]*>([\s\S]*?)<\/a>/gi;
   let match;
   while ((match = tagRe.exec(String(block || "")))) {
-    const tag = stripBasicTags(match[1]);
+    const tag = stripTagLabel(match[1]);
     if (tag && tags.indexOf(tag) < 0) tags.push(tag);
   }
   return tags;
